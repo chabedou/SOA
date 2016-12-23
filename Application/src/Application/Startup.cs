@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using Application.Models;
+
 
 namespace Application
 {
@@ -29,6 +32,8 @@ namespace Application
         {
             // Add framework services.
             services.AddMvc();
+            /*var connection = @"Server=(localdb)\mssqllocaldb;Database=Application;Trusted_Connection=True;";
+            services.AddDbContext<ResumesContext>(options => options.UseSqlServer(connection));*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
