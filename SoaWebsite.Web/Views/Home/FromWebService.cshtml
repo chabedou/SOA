@@ -1,0 +1,12 @@
+@using SoaWebsite.Common
+
+@model List<User>
+
+<div class="lol">
+    @foreach(var item in Model)
+    {
+        <div class="row">
+            @item.Name
+        </div>
+    }
+</div>
