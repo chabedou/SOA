@@ -37,11 +37,7 @@ namespace SoaWebsite.Web.Models
         public int ID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-<<<<<<< HEAD
         public List<DeveloperSkill> DeveloperSkills { get; set; }
-=======
-        public List<Relationship> Relationships { get; set; }
->>>>>>> c4da2eb93ce631fd980d8a1889495f5b76e4de9d
     }
 
     public class Skill
