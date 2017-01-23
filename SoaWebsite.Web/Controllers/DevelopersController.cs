@@ -79,10 +79,6 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> c4da2eb93ce631fd980d8a1889495f5b76e4de9d
             if (ModelState.IsValid)
             {
 
