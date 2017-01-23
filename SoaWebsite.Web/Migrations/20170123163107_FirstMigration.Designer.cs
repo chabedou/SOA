@@ -8,9 +8,10 @@ using SoaWebsite.Web.Models;
 namespace SoaWebsite.Web.Migrations
 {
     [DbContext(typeof(DeveloperContext))]
-    partial class DeveloperContextModelSnapshot : ModelSnapshot
+    [Migration("20170123163107_FirstMigration")]
+    partial class FirstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
