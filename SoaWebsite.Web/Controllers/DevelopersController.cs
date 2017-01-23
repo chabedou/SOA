@@ -212,13 +212,13 @@ namespace SoaWebsite.Web.Controllers
                 return NotFound();
             }
 
-            var Skill = await _context.Relationships.SingleOrDefaultAsync(m => m.ID == id);
-            if (Skill == null)
+            var relation = await _context.Relationships.SingleOrDefaultAsync(m => m.ID == id);
+            if (relation == null)
             {
                 return NotFound();
             }
-
-            return View(Skill);
+            relation.Skill=await _context.Skills.SingleOrDefaultAsync(m => m.ID==relation.SkillID);
+            return View(relation);
         }
 
         // POST: Skills/Delete/5
