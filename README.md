@@ -14,3 +14,4 @@ Services :
 Website :
 
     cd SoaWebsite.Web; dotnet run 
+test
