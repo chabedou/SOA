@@ -18,9 +18,33 @@ namespace SoaWebsite.Web.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string sortOrder,  string searchString)
         {
-            return View(_context.Developers.ToList());
+               ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+               ViewBag.LastNameSortParm = sortOrder == "last_name" ? "last_name_desc" : "last_name";
+               var developers = from s in _context.Developers
+                            select s;
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                        developers = developers.Where(s => s.LastName.Contains(searchString)
+                               || s.FirstName.Contains(searchString));
+                }
+               switch (sortOrder)
+               {
+                   case "name_desc":
+                        developers = developers.OrderByDescending(s => s.FirstName);
+                        break;
+                   case "last_name":
+                        developers = developers.OrderBy(s => s.LastName);
+                        break;
+                    case "last_name_desc":
+                        developers = developers.OrderByDescending(s => s.LastName);
+                        break;
+                  default:
+                        developers = developers.OrderBy(s => s.FirstName);
+                    break;
+                }
+            return View(developers.ToList());
         }
 
         public IActionResult Create()
