@@ -30,12 +30,30 @@ namespace SoaWebsite.Web.Migrations
                     b.ToTable("Developers");
                 });
 
-            modelBuilder.Entity("SoaWebsite.Web.Models.Skill", b =>
+            modelBuilder.Entity("SoaWebsite.Web.Models.Relationship", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("DeveloperID");
+
+                    b.Property<int>("SkillID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DeveloperID");
+
+                    b.HasIndex("SkillID");
+
+                    b.ToTable("Relationships");
+                });
+
+            modelBuilder.Entity("SoaWebsite.Web.Models.Skill", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("DeveloperID");
 
                     b.Property<string>("Name");
 
@@ -46,13 +64,24 @@ namespace SoaWebsite.Web.Migrations
                     b.ToTable("Skills");
                 });
 
-            modelBuilder.Entity("SoaWebsite.Web.Models.Skill", b =>
+            modelBuilder.Entity("SoaWebsite.Web.Models.Relationship", b =>
                 {
                     b.HasOne("SoaWebsite.Web.Models.Developer", "Developer")
-                        .WithMany("Skills")
+                        .WithMany()
                         .HasForeignKey("DeveloperID")
-                        .HasConstraintName("ForeignKey_Skill_Developer")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SoaWebsite.Web.Models.Skill", "Skill")
+                        .WithMany()
+                        .HasForeignKey("SkillID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SoaWebsite.Web.Models.Skill", b =>
+                {
+                    b.HasOne("SoaWebsite.Web.Models.Developer")
+                        .WithMany("Skills")
+                        .HasForeignKey("DeveloperID");
                 });
         }
     }

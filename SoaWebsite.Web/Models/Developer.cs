@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SoaWebsite.Web.Models
 {
@@ -11,15 +12,7 @@ namespace SoaWebsite.Web.Models
 
         public DbSet<Developer> Developers { get; set; }
         public DbSet<Skill> Skills { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Skill>()
-                .HasOne(p => p.Developer)
-                .WithMany(b => b.Skills)
-                .HasForeignKey(p => p.DeveloperID)
-                .HasConstraintName("ForeignKey_Skill_Developer");
-        }
+        public DbSet<Relationship> Relationships { get; set; }
     }
 
     public class Developer
@@ -34,7 +27,16 @@ namespace SoaWebsite.Web.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
+    }
+
+    public class Relationship
+    {
+        public int ID { get; set; }
+        [ForeignKey("Developer")]
         public int DeveloperID { get; set; }
         public Developer Developer { get; set; }
+        [ForeignKey("Skill")]
+        public int SkillID { get; set; }
+        public Skill Skill { get; set; }
     }
 }
