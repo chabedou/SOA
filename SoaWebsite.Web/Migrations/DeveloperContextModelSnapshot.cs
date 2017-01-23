@@ -53,13 +53,9 @@ namespace SoaWebsite.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("DeveloperID");
-
                     b.Property<string>("Name");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("DeveloperID");
 
                     b.ToTable("Skills");
                 });
@@ -67,7 +63,7 @@ namespace SoaWebsite.Web.Migrations
             modelBuilder.Entity("SoaWebsite.Web.Models.Relationship", b =>
                 {
                     b.HasOne("SoaWebsite.Web.Models.Developer", "Developer")
-                        .WithMany()
+                        .WithMany("Relationships")
                         .HasForeignKey("DeveloperID")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -75,13 +71,6 @@ namespace SoaWebsite.Web.Migrations
                         .WithMany()
                         .HasForeignKey("SkillID")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SoaWebsite.Web.Models.Skill", b =>
-                {
-                    b.HasOne("SoaWebsite.Web.Models.Developer")
-                        .WithMany("Skills")
-                        .HasForeignKey("DeveloperID");
                 });
         }
     }

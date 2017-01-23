@@ -33,7 +33,19 @@
         </div>
     </div>
 </form>
-
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+           Skills
+        </dt>
+        @foreach (var item in Model.Relationships) {
+        <dd>
+                 @Html.DisplayFor(modelItem => item.Skill.Name) |
+                 <a asp-action="DeleteSkill" asp-route-id="@item.ID">Delete</a>
+        </dd>
+        }
+    </dl>
+</div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
