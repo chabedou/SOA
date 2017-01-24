@@ -218,23 +218,14 @@ namespace SoaWebsite.Web.Controllers
                 return NotFound();
             }
 
-            var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
+            var developer = await _context.Developers.Include(d => d.DeveloperSkills)
+                                                    .ThenInclude(d => d.Skill)
+                                                    .SingleOrDefaultAsync(m => m.ID == id);
             if (developer == null)
             {
                 return NotFound();
             }
-
-            var skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
-            if (skill == null)
-            {
-                return NotFound();
-            }
-            var developerSkill=new DeveloperSkill{
-                SkillId=skill.ID,
-                DeveloperId=developer.ID,
-                Skill=skill,
-                Developer=developer
-            };
+            var developerSkill=developer.DeveloperSkills.Where(d=>d.Skill.ID==s).FirstOrDefault();
             return View(developerSkill);
         }
 
@@ -243,17 +234,17 @@ namespace SoaWebsite.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteSkillConfirmed(int id,int s)
         {
-            var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
-            var skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
-
-            var developerSkill=new DeveloperSkill{
-                SkillId=skill.ID,
-                DeveloperId=developer.ID,
-                Skill=skill,
-                Developer=developer
-            };
+            var developer = await _context.Developers.Include(d => d.DeveloperSkills)
+                                                    .ThenInclude(d => d.Skill)
+                                                    .SingleOrDefaultAsync(m => m.ID == id);
+            var skill = await _context.Skills.Include(d => d.DeveloperSkills)
+                                            .SingleOrDefaultAsync(m => m.ID == s);
+            var developerSkill=developer.DeveloperSkills.Where(d=>d.Skill.ID==s).FirstOrDefault();
             developer.DeveloperSkills.Remove(developerSkill);
             skill.DeveloperSkills.Remove(developerSkill);
+            _context.Update(developer);
+            _context.Update(skill);
+            await _context.SaveChangesAsync();
             return RedirectToAction("Edit",new { id = developer.ID});
         }
 
