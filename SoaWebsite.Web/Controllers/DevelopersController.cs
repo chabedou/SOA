@@ -18,31 +18,36 @@ namespace SoaWebsite.Web.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string sortOrder,  string searchString)
+        public IActionResult Index(string sortOrder,  string searchName, string searchSkill)
         {
                ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
                ViewBag.LastNameSortParm = sortOrder == "last_name" ? "last_name_desc" : "last_name";
-               var developers = from s in _context.Developers
-                            select s;
-                if (!String.IsNullOrEmpty(searchString))
+               var developers = _context.Developers.Include(d=>d.DeveloperSkills)
+                                                    .ThenInclude(x=>x.Skill)
+                                                    .Select(x => x);
+                if (!String.IsNullOrEmpty(searchName))
                 {
-                        developers = developers.Where(s => s.LastName.Contains(searchString)
-                               || s.FirstName.Contains(searchString));
+                        developers = developers.Where(s => s.LastName.Contains(searchName)
+                               || s.FirstName.Contains(searchName));
+                }
+                if (!String.IsNullOrEmpty(searchSkill))
+                {
+                        developers = developers.Where(s => s.DeveloperSkills.Where(x=>x.Skill.Name.Contains(searchSkill)).Count()>0);
                 }
                switch (sortOrder)
                {
-                   case "name_desc":
-                        developers = developers.OrderByDescending(s => s.FirstName);
-                        break;
-                   case "last_name":
+                    case "last_name":
                         developers = developers.OrderBy(s => s.LastName);
                         break;
                     case "last_name_desc":
                         developers = developers.OrderByDescending(s => s.LastName);
                         break;
-                  default:
+                    case "name_desc":
+                        developers = developers.OrderByDescending(s => s.FirstName);
+                        break;
+                    default:
                         developers = developers.OrderBy(s => s.FirstName);
-                    break;
+                        break;
                 }
             return View(developers.ToList());
         }
