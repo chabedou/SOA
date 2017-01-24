@@ -76,7 +76,6 @@ namespace SoaWebsite.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddSkill(int? id,[Bind("Name")] Skill skill)
         {
-            Console.WriteLine(id);
             if (id == null)
             {
                 return NotFound();
@@ -84,13 +83,15 @@ namespace SoaWebsite.Web.Controllers
             if (ModelState.IsValid)
             {
 
-                var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
-                var skillSaved = await _context.Skills.SingleOrDefaultAsync(m => m.Name == skill.Name);
+                var developer = await _context.Developers.Include(d => d.DeveloperSkills)
+                                                        .SingleOrDefaultAsync(m => m.ID == id);
+                var skillSaved = await _context.Skills.Include(s => s.DeveloperSkills)
+                                                        .SingleOrDefaultAsync(m => m.Name == skill.Name);
                 if(skillSaved == null){
                       skill.DeveloperSkills=new List<DeveloperSkill>();
-                     _context.Skills.Add(skill);
-                     _context.SaveChanges();
-                     skillSaved = await _context.Skills.SingleOrDefaultAsync(m => m.Name == skill.Name);
+                      skillSaved = skill;
+                      _context.Skills.Add(skill);
+                      _context.SaveChanges();
                 }
                 var developerSkill= new DeveloperSkill(){
                         DeveloperId=developer.ID,
@@ -98,14 +99,16 @@ namespace SoaWebsite.Web.Controllers
                         Skill=skillSaved,
                         Developer=developer
                     };
-                if(developer.DeveloperSkills==null){
-                    developer.DeveloperSkills=new List<DeveloperSkill>();
+                if(skill.DeveloperSkills==null ){
+                    skill.DeveloperSkills=new List<DeveloperSkill>();
                 }
-                if(skillSaved.DeveloperSkills==null){
-                    skillSaved.DeveloperSkills=new List<DeveloperSkill>();
+                if(developer.DeveloperSkills==null ){
+                    developer.DeveloperSkills=new List<DeveloperSkill>();
                 }
                 developer.DeveloperSkills.Add(developerSkill);
                 skillSaved.DeveloperSkills.Add(developerSkill);
+                _context.Update(developer);
+                _context.Update(skillSaved);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -119,14 +122,12 @@ namespace SoaWebsite.Web.Controllers
                 return NotFound();
             }
 
-            var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
+            var developer = await _context.Developers.Include(d => d.DeveloperSkills)
+                                                    .ThenInclude(d => d.Skill)
+                                                    .SingleOrDefaultAsync(m => m.ID == id);
             if (developer == null)
             {
                 return NotFound();
-            }
-            foreach(var x in developer.DeveloperSkills){
-                x.Skill=await _context.Skills.SingleOrDefaultAsync(m => m.ID==x.SkillId);
-                x.Developer = developer;
             }
             return View(developer);
         }
@@ -137,17 +138,12 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-            var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
+            var developer = await _context.Developers.Include(d => d.DeveloperSkills)
+                                                    .ThenInclude(d => d.Skill)
+                                                    .SingleOrDefaultAsync(m => m.ID == id);
             if (developer == null)
             {
                 return NotFound();
-            }
-            if(developer.DeveloperSkills==null){
-                developer.DeveloperSkills=new List<DeveloperSkill>();
-            }
-            foreach(var x in developer.DeveloperSkills){
-                x.Skill=await _context.Skills.SingleOrDefaultAsync(m => m.ID==x.SkillId);
-                x.Developer=developer;
             }
             return View(developer);
         }
@@ -200,7 +196,6 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-
             return View(developer);
         }
 
