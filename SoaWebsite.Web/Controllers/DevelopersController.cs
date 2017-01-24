@@ -58,6 +58,7 @@ namespace SoaWebsite.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                 developer.DeveloperSkills=new List<DeveloperSkill>();
                 _context.Developers.Add(developer);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -75,6 +76,7 @@ namespace SoaWebsite.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddSkill(int? id,[Bind("Name")] Skill skill)
         {
+            Console.WriteLine(id);
             if (id == null)
             {
                 return NotFound();
@@ -85,14 +87,25 @@ namespace SoaWebsite.Web.Controllers
                 var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
                 var skillSaved = await _context.Skills.SingleOrDefaultAsync(m => m.Name == skill.Name);
                 if(skillSaved == null){
+                      skill.DeveloperSkills=new List<DeveloperSkill>();
                      _context.Skills.Add(skill);
                      _context.SaveChanges();
                      skillSaved = await _context.Skills.SingleOrDefaultAsync(m => m.Name == skill.Name);
                 }
-                _context.Relationships.Add(new Relationship(){
-                    DeveloperID=developer.ID,
-                    SkillID=skillSaved.ID,
-                });
+                var developerSkill= new DeveloperSkill(){
+                        DeveloperId=developer.ID,
+                        SkillId=skillSaved.ID,
+                        Skill=skillSaved,
+                        Developer=developer
+                    };
+                if(developer.DeveloperSkills==null){
+                    developer.DeveloperSkills=new List<DeveloperSkill>();
+                }
+                if(skillSaved.DeveloperSkills==null){
+                    skillSaved.DeveloperSkills=new List<DeveloperSkill>();
+                }
+                developer.DeveloperSkills.Add(developerSkill);
+                skillSaved.DeveloperSkills.Add(developerSkill);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -111,11 +124,9 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-            developer.Relationships =  _context.Relationships.Where(x=>x.DeveloperID==id)
-                                        .ToList();
-            foreach(var x in developer.Relationships){
-                x.Skill=await _context.Skills.SingleOrDefaultAsync(m => m.ID==x.SkillID);
-                x.Developer=developer;
+            foreach(var x in developer.DeveloperSkills){
+                x.Skill=await _context.Skills.SingleOrDefaultAsync(m => m.ID==x.SkillId);
+                x.Developer = developer;
             }
             return View(developer);
         }
@@ -126,16 +137,17 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-
             var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
-            developer.Relationships =  _context.Relationships.Where(x=>x.DeveloperID==id).ToList();
-            foreach(var x in developer.Relationships){
-                x.Skill=await _context.Skills.SingleOrDefaultAsync(m => m.ID==x.SkillID);
-                x.Developer=developer;
-            }
             if (developer == null)
             {
                 return NotFound();
+            }
+            if(developer.DeveloperSkills==null){
+                developer.DeveloperSkills=new List<DeveloperSkill>();
+            }
+            foreach(var x in developer.DeveloperSkills){
+                x.Skill=await _context.Skills.SingleOrDefaultAsync(m => m.ID==x.SkillId);
+                x.Developer=developer;
             }
             return View(developer);
         }
@@ -204,31 +216,50 @@ namespace SoaWebsite.Web.Controllers
         }
 
         // GET: Skills/Delete/5
-        public async Task<IActionResult> DeleteSkill(int? id)
+        public async Task<IActionResult> DeleteSkill(int? id,int? s)
         {
-            if (id == null)
+            if (id == null || s==null)
             {
                 return NotFound();
             }
 
-            var relation = await _context.Relationships.SingleOrDefaultAsync(m => m.ID == id);
-            if (relation == null)
+            var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
+            if (developer == null)
             {
                 return NotFound();
             }
-            relation.Skill=await _context.Skills.SingleOrDefaultAsync(m => m.ID==relation.SkillID);
-            return View(relation);
+
+            var skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
+            if (skill == null)
+            {
+                return NotFound();
+            }
+            var developerSkill=new DeveloperSkill{
+                SkillId=skill.ID,
+                DeveloperId=developer.ID,
+                Skill=skill,
+                Developer=developer
+            };
+            return View(developerSkill);
         }
 
         // POST: Skills/Delete/5
         [HttpPost, ActionName("DeleteSkill")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteSkillConfirmed(int id)
+        public async Task<IActionResult> DeleteSkillConfirmed(int id,int s)
         {
-            var skill = await _context.Relationships.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Relationships.Remove(skill);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Edit",new { id = skill.DeveloperID });
+            var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
+            var skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
+
+            var developerSkill=new DeveloperSkill{
+                SkillId=skill.ID,
+                DeveloperId=developer.ID,
+                Skill=skill,
+                Developer=developer
+            };
+            developer.DeveloperSkills.Remove(developerSkill);
+            skill.DeveloperSkills.Remove(developerSkill);
+            return RedirectToAction("Edit",new { id = developer.ID});
         }
 
         private bool SkillExists(int id)

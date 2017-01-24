@@ -25,7 +25,7 @@
         <dt>
             Skills
         </dt>
-        @foreach (var item in Model.Relationships) {
+        @foreach (var item in Model.DeveloperSkills) {
         <dd>
                  @Html.DisplayFor(modelItem => item.Skill.Name)
         </dd>

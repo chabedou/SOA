@@ -38,10 +38,10 @@
         <dt>
            Skills
         </dt>
-        @foreach (var item in Model.Relationships) {
+        @foreach (var item in Model.DeveloperSkills) {
         <dd>
                  @Html.DisplayFor(modelItem => item.Skill.Name) |
-                 <a asp-action="DeleteSkill" asp-route-id="@item.ID">Delete</a>
+                 <a asp-action="DeleteSkill" asp-route-id="@item.DeveloperId" asp-route-s="@item.SkillId">Delete</a>
         </dd>
         }
     </dl>
