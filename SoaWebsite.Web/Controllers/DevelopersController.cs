@@ -11,45 +11,26 @@ namespace SoaWebsite.Web.Controllers
 {
     public class DevelopersController : Controller
     {
-        private DeveloperContext _context;
+        private readonly DeveloperContext _context;
 
         public DevelopersController(DeveloperContext context)
         {
             _context = context;
         }
 
-        public IActionResult Index(string sortOrder,  string searchName, string searchSkill)
+        public IActionResult Index(string sortOrder, string searchName, string searchSkill)
         {
-               ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-               ViewBag.LastNameSortParm = sortOrder == "last_name" ? "last_name_desc" : "last_name";
-               var developers = _context.Developers.Include(d=>d.DeveloperSkills)
-                                                    .ThenInclude(x=>x.Skill)
-                                                    .Select(x => x);
-                if (!String.IsNullOrEmpty(searchName))
-                {
-                        developers = developers.Where(s => s.LastName.Contains(searchName)
-                               || s.FirstName.Contains(searchName));
-                }
-                if (!String.IsNullOrEmpty(searchSkill))
-                {
-                        developers = developers.Where(s => s.DeveloperSkills.Where(x=>x.Skill.Name.Contains(searchSkill)).Count()>0);
-                }
-               switch (sortOrder)
-               {
-                    case "last_name":
-                        developers = developers.OrderBy(s => s.LastName);
-                        break;
-                    case "last_name_desc":
-                        developers = developers.OrderByDescending(s => s.LastName);
-                        break;
-                    case "name_desc":
-                        developers = developers.OrderByDescending(s => s.FirstName);
-                        break;
-                    default:
-                        developers = developers.OrderBy(s => s.FirstName);
-                        break;
-                }
-            return View(developers.ToList());
+            sortOrder=sortOrder==null?"FirstName.desc":sortOrder;
+            ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName.desc" : "FirstName";
+            ViewBag.LastNameSortParm = sortOrder == "LastName" ? "LastName.desc" : "LastName";
+            var developerFilter = new DeveloperFilter(searchName,searchSkill);
+            var developers = _context.Developers.Include(d => d.DeveloperSkills)
+                                     .ThenInclude(x => x.Skill)
+                                     .Where(developerFilter.Filter())
+                                     .Select(x => x);
+            var developorOrder = new DeveloperSorter(sortOrder);
+            var list=developorOrder.Sort(developers).ToList();
+            return View(list);
         }
 
         public IActionResult Create()
@@ -63,7 +44,7 @@ namespace SoaWebsite.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                 developer.DeveloperSkills=new List<DeveloperSkill>();
+                developer.DeveloperSkills = new List<DeveloperSkill>();
                 _context.Developers.Add(developer);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -79,7 +60,7 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddSkill(int? id,[Bind("Name")] Skill skill)
+        public async Task<IActionResult> AddSkill(int? id, [Bind("Name")] Skill skill)
         {
             if (id == null)
             {
@@ -87,29 +68,24 @@ namespace SoaWebsite.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-
                 var developer = await _context.Developers.Include(d => d.DeveloperSkills)
-                                                        .SingleOrDefaultAsync(m => m.ID == id);
+                                              .SingleOrDefaultAsync(m => m.ID == id);
                 var skillSaved = await _context.Skills.Include(s => s.DeveloperSkills)
-                                                        .SingleOrDefaultAsync(m => m.Name == skill.Name);
-                if(skillSaved == null){
-                      skill.DeveloperSkills=new List<DeveloperSkill>();
-                      skillSaved = skill;
-                      _context.Skills.Add(skill);
-                      _context.SaveChanges();
+                                               .SingleOrDefaultAsync(m => m.Name == skill.Name);
+                if (skillSaved == null)
+                {
+                    skill.DeveloperSkills = new List<DeveloperSkill>();
+                    skillSaved = skill;
+                    _context.Skills.Add(skill);
+                    _context.SaveChanges();
                 }
-                var developerSkill= new DeveloperSkill(){
-                        DeveloperId=developer.ID,
-                        SkillId=skillSaved.ID,
-                        Skill=skillSaved,
-                        Developer=developer
-                    };
-                if(skill.DeveloperSkills==null ){
-                    skill.DeveloperSkills=new List<DeveloperSkill>();
-                }
-                if(developer.DeveloperSkills==null ){
-                    developer.DeveloperSkills=new List<DeveloperSkill>();
-                }
+                var developerSkill = new DeveloperSkill
+                                     {
+                                         DeveloperId = developer.ID,
+                                         SkillId = skillSaved.ID,
+                                         Skill = skillSaved,
+                                         Developer = developer
+                                     };
                 developer.DeveloperSkills.Add(developerSkill);
                 skillSaved.DeveloperSkills.Add(developerSkill);
                 _context.Update(developer);
@@ -127,9 +103,10 @@ namespace SoaWebsite.Web.Controllers
                 return NotFound();
             }
 
-            var developer = await _context.Developers.Include(d => d.DeveloperSkills)
-                                                    .ThenInclude(d => d.Skill)
-                                                    .SingleOrDefaultAsync(m => m.ID == id);
+            var developer = await _context.Developers
+                                          .Include(d => d.DeveloperSkills)
+                                          .ThenInclude(d => d.Skill)
+                                          .SingleOrDefaultAsync(m => m.ID == id);
             if (developer == null)
             {
                 return NotFound();
@@ -143,9 +120,10 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-            var developer = await _context.Developers.Include(d => d.DeveloperSkills)
-                                                    .ThenInclude(d => d.Skill)
-                                                    .SingleOrDefaultAsync(m => m.ID == id);
+            var developer = await _context.Developers
+                                          .Include(d => d.DeveloperSkills)
+                                          .ThenInclude(d => d.Skill)
+                                          .SingleOrDefaultAsync(m => m.ID == id);
             if (developer == null)
             {
                 return NotFound();
@@ -178,10 +156,7 @@ namespace SoaWebsite.Web.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
@@ -196,7 +171,8 @@ namespace SoaWebsite.Web.Controllers
                 return NotFound();
             }
 
-            var developer = await _context.Developers.SingleOrDefaultAsync(m => m.ID == id);
+            var developer = await _context.Developers
+                                          .SingleOrDefaultAsync(m => m.ID == id);
             if (developer == null)
             {
                 return NotFound();
@@ -205,7 +181,8 @@ namespace SoaWebsite.Web.Controllers
         }
 
         // POST: Developers/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -216,41 +193,49 @@ namespace SoaWebsite.Web.Controllers
         }
 
         // GET: Skills/Delete/5
-        public async Task<IActionResult> DeleteSkill(int? id,int? s)
+        public async Task<IActionResult> DeleteSkill(int? id, int? s)
         {
-            if (id == null || s==null)
+
+            if (id == null || s == null)
             {
                 return NotFound();
             }
 
             var developer = await _context.Developers.Include(d => d.DeveloperSkills)
-                                                    .ThenInclude(d => d.Skill)
-                                                    .SingleOrDefaultAsync(m => m.ID == id);
+                                          .ThenInclude(d => d.Skill)
+                                          .SingleOrDefaultAsync(m => m.ID == id);
             if (developer == null)
             {
                 return NotFound();
             }
-            var developerSkill=developer.DeveloperSkills.Where(d=>d.Skill.ID==s).FirstOrDefault();
+            var developerSkill = developer.DeveloperSkills
+                                          .Where(d => d.Skill.ID == s)
+                                          .FirstOrDefault();
             return View(developerSkill);
         }
 
         // POST: Skills/Delete/5
-        [HttpPost, ActionName("DeleteSkill")]
+        [HttpPost]
+        [ActionName("DeleteSkill")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteSkillConfirmed(int id,int s)
+        public async Task<IActionResult> DeleteSkillConfirmed(int id, int s)
         {
-            var developer = await _context.Developers.Include(d => d.DeveloperSkills)
-                                                    .ThenInclude(d => d.Skill)
-                                                    .SingleOrDefaultAsync(m => m.ID == id);
-            var skill = await _context.Skills.Include(d => d.DeveloperSkills)
-                                            .SingleOrDefaultAsync(m => m.ID == s);
-            var developerSkill=developer.DeveloperSkills.Where(d=>d.Skill.ID==s).FirstOrDefault();
+            var developer = await _context.Developers
+                                          .Include(d => d.DeveloperSkills)
+                                          .ThenInclude(d => d.Skill)
+                                          .SingleOrDefaultAsync(m => m.ID == id);
+            var skill = await _context.Skills
+                                      .Include(d => d.DeveloperSkills)
+                                      .SingleOrDefaultAsync(m => m.ID == s);
+            var developerSkill = developer.DeveloperSkills
+                                          .Where(d => d.Skill.ID == s)
+                                          .FirstOrDefault();
             developer.DeveloperSkills.Remove(developerSkill);
             skill.DeveloperSkills.Remove(developerSkill);
             _context.Update(developer);
             _context.Update(skill);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Edit",new { id = developer.ID});
+            return RedirectToAction("Edit", new { id = developer.ID });
         }
 
         private bool SkillExists(int id)
