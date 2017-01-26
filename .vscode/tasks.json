@@ -7,10 +7,17 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}\\SoaWebsite.Services\\project.json"
+                "${workspaceRoot}\\SoaWebsite.Web"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "test",
+            "isTestCommand": true,
+            "args": [
+                "${workspaceRoot}\\SoaWebsite.Tests"
+            ]
         }
     ]
 }
