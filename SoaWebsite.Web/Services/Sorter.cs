@@ -3,14 +3,14 @@ using SoaWebsite.Web.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SoaWebsite.Web.Controllers
+namespace SoaWebsite.Web.Services
 {
-    public class DeveloperSorter
+    public class Sorter
     {
         private string order;
         private string field;
 
-        public DeveloperSorter(string fieldWithReverse)
+        public Sorter(string fieldWithReverse)
         {
             var parameters = fieldWithReverse.Split('.');
             field = parameters[0];
