@@ -20,16 +20,16 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Index(string sortOrder, string searchName, string searchSkill)
         {
-            sortOrder=sortOrder==null?"FirstName.desc":sortOrder;
+            sortOrder = sortOrder == null ? "FirstName.desc" : sortOrder;
             ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName.desc" : "FirstName";
             ViewBag.LastNameSortParm = sortOrder == "LastName" ? "LastName.desc" : "LastName";
-            var developerFilter = new DeveloperFilter(searchName,searchSkill);
+            var developerFilter = new DeveloperFilter(searchName, searchSkill);
             var developers = _context.Developers.Include(d => d.DeveloperSkills)
                                      .ThenInclude(x => x.Skill)
                                      .Where(developerFilter.Filter())
                                      .Select(x => x);
             var developorOrder = new DeveloperSorter(sortOrder);
-            var list=developorOrder.Sort(developers).ToList();
+            var list = developorOrder.Sort(developers).ToList();
             return View(list);
         }
 
@@ -49,7 +49,6 @@ namespace SoaWebsite.Web.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             return View(developer);
         }
 
@@ -80,12 +79,12 @@ namespace SoaWebsite.Web.Controllers
                     _context.SaveChanges();
                 }
                 var developerSkill = new DeveloperSkill
-                                     {
-                                         DeveloperId = developer.ID,
-                                         SkillId = skillSaved.ID,
-                                         Skill = skillSaved,
-                                         Developer = developer
-                                     };
+                {
+                    DeveloperId = developer.ID,
+                    SkillId = skillSaved.ID,
+                    Skill = skillSaved,
+                    Developer = developer
+                };
                 developer.DeveloperSkills.Add(developerSkill);
                 skillSaved.DeveloperSkills.Add(developerSkill);
                 _context.Update(developer);

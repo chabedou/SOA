@@ -12,8 +12,8 @@ namespace SoaWebsite.Web.Controllers
 
         public DeveloperFilter(string byName,string bySkill)
         {
-            this.byName=byName==null?"":byName;
-            this.bySkill=bySkill==null?"":bySkill;
+            this.byName= byName==null ? "" : byName;
+            this.bySkill= bySkill==null ? "" : bySkill;
         }
         
         public Func<Developer,bool> Filter(){
@@ -21,6 +21,9 @@ namespace SoaWebsite.Web.Controllers
             return filter;
         }
         private Func<Developer,bool> conditionSkill(){
+            if(bySkill == ""){
+                return s => true;
+            }
             Func<DeveloperSkill,bool> condition=s=>s.Skill.Name.Contains(bySkill);
             return s => s.DeveloperSkills.Where(condition).Count()>0;
         }

@@ -30,7 +30,7 @@ namespace SoaWebsite.Web.Models
                 .HasForeignKey(pt => pt.SkillId);
         }
     }
-    
+
     public class Developer
     {
         [Key]
