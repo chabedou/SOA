@@ -1,15 +1,16 @@
 {
   "userSecretsId": "aspnet-SoaWebsite.Web-0c5687d2-5111-4254-9e5b-ab1b5d05b4bf",
-
+  "version": "1.0.0",
   "dependencies": {
     "SoaWebsite.Common": "*",
     "Microsoft.NETCore.App": {
       "version": "1.0.1",
       "type": "platform"
     },
+    /*"Microsoft.EntityFrameworkCore.InMemory": "1.0.0",
     "NSubstitute": "2.0.0-rc",
     "NUnit": "3.6.0",
-    "dotnet-test-nunit": "3.4.0-beta-3",
+    "dotnet-test-nunit": "3.4.0-beta-3",*/
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.0.0",
     "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0",
@@ -57,7 +58,7 @@
     "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.1.0-preview4-final"
     },
 
-  "testRunner": "nunit",
+  //"testRunner": "nunit",
 
   "frameworks": {
     "netcoreapp1.0": {
