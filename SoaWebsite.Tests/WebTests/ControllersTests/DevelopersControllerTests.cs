@@ -68,7 +68,7 @@ namespace SoaWebsite.Tests
             {
                 Assert.AreEqual(1, context.Skills.Count());
                 var developer = await context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
-                                              .SingleOrDefaultAsync(m => m.ID == 1);
+                                              .SingleOrDefaultAsync(m => m.FirstName == "Toto");
                 Assert.AreEqual("Python", developer.DeveloperSkills.Single().Skill.Name);
             }
         }
