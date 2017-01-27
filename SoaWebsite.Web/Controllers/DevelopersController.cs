@@ -18,12 +18,13 @@ namespace SoaWebsite.Web.Controllers
         {
             service = new DeveloperService(context);
         }
-        public IActionResult Index(string sortOrder, string searchName, string searchSkill)
+        public IActionResult Index(string sortOrder, string[] selectedSkills)
         {
             sortOrder = sortOrder == null ? "FirstName.desc" : sortOrder;
             ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName.desc" : "FirstName";
             ViewBag.LastNameSortParm = sortOrder == "LastName" ? "LastName.desc" : "LastName";
-            var list = service.FindDevelopers(searchName, searchSkill, sortOrder);
+            ViewBag.Skills = service.Skills();
+            var list=service.FindDevelopers(selectedSkills, sortOrder).ToList();
             return View(list);
         }
 
@@ -96,7 +97,6 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
@@ -133,9 +133,10 @@ namespace SoaWebsite.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Developer developer = await service.DeveloperById(id);
+            Developer developer = await service.DeveloperWithSkillsById(id);
             if (developer != null)
             {
+                service.RemoveDeveloper(developer);
                 return RedirectToAction("Index");
             }
             return NotFound();
