@@ -56,7 +56,7 @@ namespace SoaWebsite.Tests
 
                 var skill = new Skill();
                 skill.Name = "Python";
-                await controller.AddSkill((int?)developer.ID, skill);
+                await controller.AddSkill(developer.ID, skill);
             }
 
             using (var context = new DeveloperContext(options))
@@ -72,8 +72,22 @@ namespace SoaWebsite.Tests
         public async Task GivenAnExistingDeveloper_WhenICallEdit_ItUpdatesTheDatabase()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
-                .UseInMemoryDatabase(databaseName: "AddSkill_writes_to_database")
+                .UseInMemoryDatabase(databaseName: "Edit")
                 .Options;
+
+            using (var context = new DeveloperContext(options))
+            {
+                var controller = new DevelopersController(context);
+                var developer = new Developer();
+
+                developer.FirstName = "Toto";
+                developer.LastName = "Tata";
+                controller.Create(developer);
+
+                var skill = new Skill();
+                skill.Name = "Python";
+                await controller.AddSkill(developer.ID, skill);
+            }
 
             using (var context = new DeveloperContext(options))
             {
