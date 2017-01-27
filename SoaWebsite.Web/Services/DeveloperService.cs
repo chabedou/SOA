@@ -79,27 +79,27 @@ namespace SoaWebsite.Web.Services
         public async Task<bool> AddSkill(int? id, Skill skill)
         {
             Developer developer = await DeveloperWithSkillsById(id);
-            skill = await SkillWithDevelopersByName(skill.Name);
+            var remoteSkill = await SkillWithDevelopersByName(skill.Name);
             if (developer != null)
             {
-                if (skill == null)
+                if (remoteSkill == null)
                 {
-                    skill = new Skill() { Name = skill.Name };
-                    skill.DeveloperSkills = new List<DeveloperSkill>();
-                    _context.Skills.Add(skill);
+                    remoteSkill = new Skill() { Name = skill.Name };
+                    remoteSkill.DeveloperSkills = new List<DeveloperSkill>();
+                    _context.Skills.Add(remoteSkill);
                     _context.SaveChanges();
                 }
                 var developerSkill = new DeveloperSkill
                 {
                     DeveloperId = developer.ID,
-                    SkillId = skill.ID,
-                    Skill = skill,
+                    SkillId = remoteSkill.ID,
+                    Skill = remoteSkill,
                     Developer = developer
                 };
                 developer.DeveloperSkills.Add(developerSkill);
-                skill.DeveloperSkills.Add(developerSkill);
+                remoteSkill.DeveloperSkills.Add(developerSkill);
                 _context.Update(developer);
-                _context.Update(skill);
+                _context.Update(remoteSkill);
                 _context.SaveChanges();
                 return true;
             }
@@ -150,6 +150,10 @@ namespace SoaWebsite.Web.Services
         public bool DeveloperExists(int id)
         {
             return _context.Developers.Any(e => e.ID == id);
+        }
+
+        public List<string> Skills(){
+            return _context.Skills.Select(x=>x.Name).ToList();
         }
     }
 }
