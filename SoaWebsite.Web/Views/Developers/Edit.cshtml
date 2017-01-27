@@ -34,7 +34,7 @@
                 @foreach (var item in Model.DeveloperSkills) {
                 <dd>
                     @Html.DisplayFor(modelItem => item.Skill.Name) |
-                    <a asp-action="DeleteSkill" asp-route-id="@item.DeveloperId" asp-route-s="@item.SkillId">Delete</a>
+                    <a asp-action="DeleteSkill" asp-route-idDeveloper="@item.DeveloperId" asp-route-idSkill="@item.SkillId">Delete</a>
                 </dd>
                 }
             </dl>

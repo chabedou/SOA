@@ -49,13 +49,13 @@
                          <dd> @skillDev.Skill.Name </dd>
                     }
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>|
-                    <a asp-action="AddSkill" asp-route-id="@item.ID">Add skill</a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+            <td>
+                <a asp-action="Edit" asp-route-idDeveloper="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-idDeveloper="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-idDeveloper="@item.ID">Delete</a>|
+                <a asp-action="AddSkill" asp-route-idDeveloper="@item.ID">Add skill</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

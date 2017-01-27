@@ -52,13 +52,13 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddSkill(int? id, [Bind("Name")] Skill skill)
+        public async Task<IActionResult> AddSkill(int? idDeveloper, [Bind("Name")] Skill skill)
         {
-            if (id == null)
+            if (idDeveloper == null)
             {
                 return NotFound();
             }
-            var added = await service.AddSkill(id, skill);
+            var added = await service.AddSkill(idDeveloper, skill);
             if (ModelState.IsValid && added)
             {
                 return RedirectToAction("Index");
@@ -66,9 +66,9 @@ namespace SoaWebsite.Web.Controllers
             return View(skill);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? idDeveloper)
         {
-            Developer developer = await service.DeveloperWithSkillsById(id);
+            Developer developer = await service.DeveloperWithSkillsById(idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -76,9 +76,9 @@ namespace SoaWebsite.Web.Controllers
             return View(developer);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? idDeveloper)
         {
-            Developer developer = await service.DeveloperWithSkillsById(id);
+            Developer developer = await service.DeveloperWithSkillsById(idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -91,9 +91,9 @@ namespace SoaWebsite.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("ID,FirstName,LastName")] Developer developer)
+        public IActionResult Edit(int idDeveloper, [Bind("ID,FirstName,LastName")] Developer developer)
         {
-            if (id != developer.ID)
+            if (idDeveloper != developer.ID)
             {
                 return NotFound();
             }
@@ -117,9 +117,9 @@ namespace SoaWebsite.Web.Controllers
         }
 
         // GET: Developers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? idDeveloper)
         {
-            var developer = await service.DeveloperById(id);
+            var developer = await service.DeveloperById(idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -131,9 +131,13 @@ namespace SoaWebsite.Web.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int idDeveloper)
         {
+<<<<<<< HEAD
             Developer developer = await service.DeveloperWithSkillsById(id);
+=======
+            Developer developer = await service.DeveloperById(idDeveloper);
+>>>>>>> 45197443c0c8d85b4bdbac736f684d2ba03e63ed
             if (developer != null)
             {
                 service.RemoveDeveloper(developer);
@@ -143,9 +147,9 @@ namespace SoaWebsite.Web.Controllers
         }
 
         // GET: Skills/Delete/5
-        public async Task<IActionResult> DeleteSkill(int? id, int? s)
+        public async Task<IActionResult> DeleteSkill(int? idDeveloper, int? idSkill)
         {
-            var developerSkill = await service.GetDeveloperSkill(id, s);
+            var developerSkill = await service.GetDeveloperSkill(idDeveloper, idSkill);
             if (developerSkill == null)
             {
                 return NotFound();
@@ -157,12 +161,12 @@ namespace SoaWebsite.Web.Controllers
         [HttpPost]
         [ActionName("DeleteSkill")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteSkillConfirmed(int id, int s)
+        public async Task<IActionResult> DeleteSkillConfirmed(int idDeveloper, int idSkill)
         {
-            var removed = await service.TryRemoveSkill(id, s);
+            var removed = await service.TryRemoveSkill(idDeveloper, idSkill);
             if (removed)
             {
-                return RedirectToAction("Edit", new { id = id });
+                return RedirectToAction("Edit", new { id = idDeveloper });
             }
             return NotFound();
         }
