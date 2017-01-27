@@ -49,14 +49,14 @@ namespace SoaWebsite.Tests
             {
                 var controller = new DevelopersController(context);
                 var developer = new Developer();
-                
+
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
                 controller.Create(developer);
 
                 var skill = new Skill();
                 skill.Name = "Python";
-                await controller.AddSkill((int?) developer.ID, skill);
+                await controller.AddSkill((int?)developer.ID, skill);
             }
 
             using (var context = new DeveloperContext(options))
@@ -66,6 +66,55 @@ namespace SoaWebsite.Tests
                                               .SingleOrDefaultAsync(m => m.FirstName == "Toto");
                 Assert.AreEqual("Python", developer.DeveloperSkills.Single().Skill.Name);
             }
+        }
+
+        [Test]
+        public async Task GivenAnExistingDeveloper_WhenICallEdit_ItUpdatesTheDatabase()
+        {
+            var options = new DbContextOptionsBuilder<DeveloperContext>()
+                .UseInMemoryDatabase(databaseName: "AddSkill_writes_to_database")
+                .Options;
+
+            /*using (var context = new DeveloperContext(options))
+            {
+                var controller = new DevelopersController(context);
+                var developer = new Developer();
+
+                developer.FirstName = "Toto";
+                developer.LastName = "Tata";
+                controller.Create(developer);
+
+                var skill = new Skill();
+                skill.Name = "Python";
+                await controller.AddSkill(developer.ID, skill);
+            }*/
+
+            using (var context = new DeveloperContext(options))
+            {
+                var developer = await context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
+                                              .SingleOrDefaultAsync(m => m.FirstName == "Toto");
+                var controller = new DevelopersController(context);
+                var editedDeveloper = new Developer
+                    {
+                    ID = developer.ID,
+                    FirstName = "Bob",
+                    LastName = "Bobby"
+                };
+                controller.Edit(developer.ID, editedDeveloper);
+                
+            }
+
+            using (var context = new DeveloperContext(options))
+            {
+                var developer = await context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
+                                              .SingleOrDefaultAsync(m => m.FirstName == "Bob");
+                Assert.AreEqual(1, context.Skills.Count());
+                Assert.AreEqual(1, context.Developers.Count());
+
+                Assert.AreEqual("Bobby", developer.LastName);
+                
+            }
+            
         }
 
         [Test]
@@ -79,7 +128,7 @@ namespace SoaWebsite.Tests
             {
                 var controller = new DevelopersController(context);
                 var developer = new Developer();
-                
+
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
                 controller.Create(developer);
@@ -94,7 +143,7 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                
+
                 Assert.AreEqual(2, context.Skills.Count());
                 var developer = await context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
                                               .SingleOrDefaultAsync(m => m.FirstName == "Toto");

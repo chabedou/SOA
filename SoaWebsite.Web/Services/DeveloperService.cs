@@ -145,7 +145,7 @@ namespace SoaWebsite.Web.Services
         public void Update(Developer developer)
         {
             _context.Update(developer);
-            _context.SaveChanges();
+             _context.SaveChanges();
         }
         public bool DeveloperExists(int id)
         {
