@@ -71,7 +71,15 @@ namespace SoaWebsite.Web.Services
         }
         public void RemoveDeveloper(Developer developer)
         {
+            foreach (var developerSkill in developer.DeveloperSkills)
+            {
+                var skill = developerSkill.Skill;
+                skill.DeveloperSkills.Remove(developerSkill);
+                _context.Update(skill);
+            }
             developer.DeveloperSkills = new List<DeveloperSkill>();
+            _context.Update(developer);
+            _context.SaveChanges();
             _context.Developers.Remove(developer);
             _context.SaveChanges();
         }
@@ -125,9 +133,9 @@ namespace SoaWebsite.Web.Services
             return false;
         }
 
-        public IEnumerable<Developer> FindDevelopers(string searchName, string searchSkill, string sortOrder)
+        public IEnumerable<Developer> FindDevelopers(string[] skills, string sortOrder)
         {
-            var filter = new Filter(searchName, searchSkill);
+            var filter = new Filter(skills);
             var developers = _context.Developers.Include(d => d.DeveloperSkills)
                                      .ThenInclude(x => x.Skill)
                                      .Where(filter.Condition())
@@ -152,8 +160,9 @@ namespace SoaWebsite.Web.Services
             return _context.Developers.Any(e => e.ID == id);
         }
 
-        public List<string> Skills(){
-            return _context.Skills.Select(x=>x.Name).ToList();
+        public List<string> Skills()
+        {
+            return _context.Skills.Select(x => x.Name).ToList();
         }
     }
 }

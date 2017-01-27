@@ -11,5 +11,6 @@ namespace SoaWebsite.Web.Models
         public int ID { get; set; }
         public string Name { get; set; }
         public List<DeveloperSkill> DeveloperSkills { get; set; }
+
     }
 }

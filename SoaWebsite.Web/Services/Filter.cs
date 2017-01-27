@@ -7,27 +7,36 @@ namespace SoaWebsite.Web.Services
 {
     public class Filter
     {
-        private string byName;
-        private string bySkill;
+        private string[] skills;
 
-        public Filter(string byName, string bySkill)
+        public Filter(string[] skills)
         {
-            this.byName = byName == null ? "" : byName;
-            this.bySkill = bySkill == null ? "" : bySkill;
+            this.skills = skills;
         }
 
         public Func<Developer, bool> Condition()
         {
-            Func<Developer, bool> filter = s => ConditionSkill()(s) && ConditionName()(s);
+            Func<Developer, bool> filter = s =>
+            {
+                var hasAllSkills = true;
+                if (skills != null && skills.Length != 0)
+                {
+                    foreach (var skill in skills)
+                    {
+                        hasAllSkills = hasAllSkills && ConditionSkill(skill)(s);
+                    }
+                }
+                return hasAllSkills;
+            };
             return filter;
         }
-        private Func<Developer, bool> ConditionSkill()
+        private static Func<Developer, bool> ConditionSkill(string bySkill)
         {
             Func<DeveloperSkill, bool> condition = s => s.Skill.Name.Contains(bySkill);
             return s => s.DeveloperSkills.Count() == 0 || s.DeveloperSkills.Where(condition).Count() > 0;
         }
 
-        private Func<Developer, bool> ConditionName()
+        private static Func<Developer, bool> ConditionName(string byName)
         {
             Func<string, bool> condition = s => s.Contains(byName);
             return s => condition(s.LastName) || condition(s.FirstName);
