@@ -69,10 +69,10 @@ namespace SoaWebsite.Tests
         }
 
         [Test]
-        public async Task GivenAnExistingSkill_WhenITryRemoveSkillIt_ItIsRemovedFromTheDatabase()
+        public async Task GivenAnExistingSkill_WhenICallDeleteSkillConfirmed_ItIsRemovedFromTheDatabase()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
-                .UseInMemoryDatabase(databaseName: "TryRemoveSkill_updates_database")
+                .UseInMemoryDatabase(databaseName: "DeleteSkillConfirmed_updates_database")
                 .Options;
 
             using (var context = new DeveloperContext(options))
@@ -94,6 +94,7 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
+                
                 Assert.AreEqual(2, context.Skills.Count());
                 var developer = await context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
                                               .SingleOrDefaultAsync(m => m.FirstName == "Toto");
@@ -104,7 +105,8 @@ namespace SoaWebsite.Tests
 
                 var controller = new DevelopersController(context);
                 await controller.DeleteSkillConfirmed(developer.ID, python.ID);
-                Assert.AreEqual(2, context.Skills.Count());
+                Assert.AreEqual(1, developer.DeveloperSkills.Count());
+                Assert.AreEqual(0, python.DeveloperSkills.Count());
             }
         }
     }
