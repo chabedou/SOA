@@ -24,7 +24,7 @@ namespace SoaWebsite.Web.Controllers
             ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName.desc" : "FirstName";
             ViewBag.LastNameSortParm = sortOrder == "LastName" ? "LastName.desc" : "LastName";
             ViewBag.Skills = service.Skills();
-            var list=service.FindDevelopers(selectedSkills, sortOrder).ToList();
+            var list = service.FindDevelopers(selectedSkills, sortOrder).ToList();
             return View(list);
         }
 
@@ -133,11 +133,7 @@ namespace SoaWebsite.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int idDeveloper)
         {
-<<<<<<< HEAD
-            Developer developer = await service.DeveloperWithSkillsById(id);
-=======
-            Developer developer = await service.DeveloperById(idDeveloper);
->>>>>>> 45197443c0c8d85b4bdbac736f684d2ba03e63ed
+            Developer developer = await service.DeveloperWithSkillsById(idDeveloper);
             if (developer != null)
             {
                 service.RemoveDeveloper(developer);
@@ -166,7 +162,7 @@ namespace SoaWebsite.Web.Controllers
             var removed = await service.TryRemoveSkill(idDeveloper, idSkill);
             if (removed)
             {
-                return RedirectToAction("Edit", new { id = idDeveloper });
+                return RedirectToAction("Edit", new { idDeveloper = idDeveloper });
             }
             return NotFound();
         }
