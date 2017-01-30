@@ -9,6 +9,10 @@ namespace SoaWebsite.Web.Models
     {
         [Key]
         public int ID { get; set; }
+       
+        [Required(ErrorMessage = "Please enter skill name")]
+        [StringLength(50, ErrorMessage = "The skill name must be less than {1} characters.")]
+        [Display(Name = "Skill name:")]
         public string Name { get; set; }
         public List<DeveloperSkill> DeveloperSkills { get; set; }
 
