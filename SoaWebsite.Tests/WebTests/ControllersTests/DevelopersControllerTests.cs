@@ -39,7 +39,7 @@ namespace SoaWebsite.Tests
         }
 
         [Test]
-        public async Task GivenASkill_WhenICallAddSkill_ThenItUpdatesTheDatabase()
+        public void GivenASkill_WhenICallAddSkill_ThenItUpdatesTheDatabase()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
                 .UseInMemoryDatabase(databaseName: "AddSkill_writes_to_database")
@@ -56,20 +56,20 @@ namespace SoaWebsite.Tests
 
                 var skill = new Skill();
                 skill.Name = "Python";
-                await controller.AddSkill(developer.ID, skill);
+                controller.AddSkill(developer.ID, skill);
             }
 
             using (var context = new DeveloperContext(options))
             {
                 Assert.AreEqual(1, context.Skills.Count());
-                var developer = await context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
-                                              .SingleOrDefaultAsync(m => m.FirstName == "Toto");
+                var developer = context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
+                                              .SingleOrDefaultAsync(m => m.FirstName == "Toto").Result;
                 Assert.AreEqual("Python", developer.DeveloperSkills.Single().Skill.Name);
             }
         }
 
         [Test]
-        public async Task GivenAnExistingDeveloper_WhenICallEdit_ItUpdatesTheDatabase()
+        public void GivenAnExistingDeveloper_WhenICallEdit_ItUpdatesTheDatabase()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
                 .UseInMemoryDatabase(databaseName: "Edit")
@@ -86,13 +86,13 @@ namespace SoaWebsite.Tests
 
                 var skill = new Skill();
                 skill.Name = "Python";
-                await controller.AddSkill(developer.ID, skill);
+                controller.AddSkill(developer.ID, skill);
             }
 
             using (var context = new DeveloperContext(options))
             {
-                var developer = await context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
-                                              .SingleOrDefaultAsync(m => m.FirstName == "Toto");
+                var developer = context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
+                                              .SingleOrDefaultAsync(m => m.FirstName == "Toto").Result;
                 var controller = new DevelopersController(context);
                 developer.FirstName = "Bob";
                 developer.LastName = "Bobby";
@@ -101,8 +101,8 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var developer = await context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
-                                              .SingleOrDefaultAsync(m => m.FirstName == "Bob");
+                var developer = context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
+                                              .SingleOrDefaultAsync(m => m.FirstName == "Bob").Result;
                 Assert.AreEqual(1, context.Skills.Count());
                 Assert.AreEqual(1, context.Developers.Count());
                 Assert.AreEqual("Bobby", developer.LastName);
@@ -110,7 +110,7 @@ namespace SoaWebsite.Tests
         }
 
         [Test]
-        public async Task GivenAnExistingSkill_WhenICallDeleteSkillConfirmed_ItIsRemovedFromTheDatabase()
+        public void GivenAnExistingSkill_WhenICallDeleteSkillConfirmed_ItIsRemovedFromTheDatabase()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
                 .UseInMemoryDatabase(databaseName: "DeleteSkillConfirmed_updates_database")
@@ -129,23 +129,23 @@ namespace SoaWebsite.Tests
                 python.Name = "Python";
                 var java = new Skill();
                 java.Name = "Java";
-                await controller.AddSkill(developer.ID, python);
-                await controller.AddSkill(developer.ID, java);
+                controller.AddSkill(developer.ID, python);
+                controller.AddSkill(developer.ID, java);
             }
 
             using (var context = new DeveloperContext(options))
             {
 
                 Assert.AreEqual(2, context.Skills.Count());
-                var developer = await context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
-                                              .SingleOrDefaultAsync(m => m.FirstName == "Toto");
+                var developer = context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
+                                              .SingleOrDefaultAsync(m => m.FirstName == "Toto").Result;
                 var python = developer.DeveloperSkills.Where(m => m.Skill.Name == "Python").Single().Skill;
                 Assert.AreEqual("Python", python.Name);
                 var java = developer.DeveloperSkills.Where(m => m.Skill.Name == "Java").Single().Skill;
                 Assert.AreEqual("Java", java.Name);
 
                 var controller = new DevelopersController(context);
-                await controller.DeleteSkillConfirmed(developer.ID, python.ID);
+                controller.DeleteSkillConfirmed(developer.ID, python.ID);
                 Assert.AreEqual(1, developer.DeveloperSkills.Count());
                 Assert.AreEqual(0, python.DeveloperSkills.Count());
             }
