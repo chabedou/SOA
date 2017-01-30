@@ -32,8 +32,8 @@ namespace SoaWebsite.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=EFGetStarted.AspNetCore.NewDb;Trusted_Connection=True;";
-            services.AddDbContext<DeveloperContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<DeveloperContext>(options =>
+                                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
