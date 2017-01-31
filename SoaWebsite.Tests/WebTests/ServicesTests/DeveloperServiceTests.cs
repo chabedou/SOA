@@ -82,5 +82,126 @@ namespace SoaWebsite.Tests
                 Assert.AreEqual("Python", actual.DeveloperSkills.Single().Skill.Name);
             }
         }
+
+        [Test]
+        public async Task GivenASkillName_WhenICallSkillWithDevelopersByName_ThenItReturnsTheSkill()
+        {
+            var options = new DbContextOptionsBuilder<DeveloperContext>()
+                .UseInMemoryDatabase(databaseName: "SkillWithDevelopersByName")
+                .Options;
+
+            var python = new Skill();
+            python.Name = "Python";
+
+            using (var context = new DeveloperContext(options))
+            {
+                var controller = new DevelopersController(context);
+                var developer = new Developer();
+                developer.FirstName = "Toto";
+                developer.LastName = "Tata";
+                controller.Create(developer);
+
+                
+                await controller.AddSkill(developer.ID, python);
+                var skill = new Skill();
+                skill.Name = "Java";
+                await controller.AddSkill(developer.ID, skill);
+            }
+
+            using (var context = new DeveloperContext(options))
+            {
+                var service = new DeveloperService(context);
+                var skill = await service.SkillWithDevelopersByName("Python");
+                Assert.AreEqual(python.Name, skill.Name);
+                Assert.AreEqual("Toto", skill.DeveloperSkills.Single().Developer.FirstName);
+            }
+        }
+
+        [Test]
+        public async Task GivenANonExistentSkillName_WhenICallSkillWithDevelopersByName_ThenItReturnsNull()
+        {
+            var options = new DbContextOptionsBuilder<DeveloperContext>()
+                .UseInMemoryDatabase(databaseName: "SkillWithDevelopersByNameNull")
+                .Options;
+
+            var python = new Skill();
+            python.Name = "Python";
+
+            using (var context = new DeveloperContext(options))
+            {
+                var controller = new DevelopersController(context);
+                var developer = new Developer();
+                developer.FirstName = "Toto";
+                developer.LastName = "Tata";
+                controller.Create(developer);
+
+                
+                await controller.AddSkill(developer.ID, python);
+                var skill = new Skill();
+                skill.Name = "Java";
+                await controller.AddSkill(developer.ID, skill);
+            }
+
+            using (var context = new DeveloperContext(options))
+            {
+                var service = new DeveloperService(context);
+                var skill = await service.SkillWithDevelopersByName("C#");
+                Assert.AreEqual(null, skill);
+            }
+        }
+
+        [Test]
+        public void GivenADeveloper_WhenICallAddDeveloper_ThenItUpdatesTheDatabase()
+        {
+            var options = new DbContextOptionsBuilder<DeveloperContext>()
+                .UseInMemoryDatabase(databaseName: "AddDeveloper")
+                .Options;
+
+            using (var context = new DeveloperContext(options))
+            {
+                var service = new DeveloperService(context);
+                var developer = new Developer();
+                developer.FirstName = "Toto";
+                developer.LastName = "Tata";
+                service.AddDeveloper(developer);
+            }
+
+            using (var context = new DeveloperContext(options))
+            {
+                Assert.AreEqual(1, context.Developers.Count());
+            }
+        }
+
+        [Test]
+        public async Task GivenADeveloperIdAndASkillId_WhenICallGetDeveloperSkill_ThenIGetTheDeveloperSkill()
+        {
+            var options = new DbContextOptionsBuilder<DeveloperContext>()
+                .UseInMemoryDatabase(databaseName: "DeveloperSkill")
+                .Options;
+
+            var python = new Skill();
+            python.Name = "Python";
+
+            using (var context = new DeveloperContext(options))
+            {
+                var controller = new DevelopersController(context);
+                var developer = new Developer();
+                developer.FirstName = "Toto";
+                developer.LastName = "Tata";
+                controller.Create(developer);
+                
+                await controller.AddSkill(developer.ID, python);
+                var skill = new Skill();
+                skill.Name = "Java";
+                await controller.AddSkill(developer.ID, skill);
+            }
+
+            using (var context = new DeveloperContext(options))
+            {
+                var service = new DeveloperService(context);
+                var developerskill = service.GetDeveloperSkill(1, 1);
+                Assert.AreEqual(1, context.Developers.Count());
+            }
+        }
     }
 }
