@@ -17,36 +17,36 @@ namespace SoaWebsite.Web.Services
         {
             _context = context;
         }
-        public async Task<Developer> DeveloperWithSkillsById(int? idDeveloper)
+        public Developer DeveloperWithSkillsById(int? idDeveloper)
         {
             if (idDeveloper != null)
             {
-                var developer = await _context.Developers
+                var developer = _context.Developers
                                     .Include(d => d.DeveloperSkills)
                                     .ThenInclude(d => d.Skill)
-                                    .SingleOrDefaultAsync(m => m.ID == idDeveloper);
+                                    .SingleOrDefaultAsync(m => m.ID == idDeveloper).Result;
                 return developer;
             }
             return null;
         }
 
-        public async Task<Developer> DeveloperById(int? idDeveloper)
+        public Developer DeveloperById(int? idDeveloper)
         {
             if (idDeveloper != null)
             {
-                var developer = await _context.Developers
-                    .SingleOrDefaultAsync(m => m.ID == idDeveloper);
+                var developer = _context.Developers
+                    .SingleOrDefaultAsync(m => m.ID == idDeveloper).Result;
                 return developer;
             }
             return null;
         }
 
-        public async Task<Skill> SkillWithDevelopersByName(string skillName)
+        public Skill SkillWithDevelopersByName(string skillName)
         {
-            Skill skill = await _context.Skills
+            Skill skill = _context.Skills
                             .Include(s => s.DeveloperSkills)
                             .ThenInclude(d => d.Developer)
-                            .SingleOrDefaultAsync(m => m.Name == skillName);
+                            .SingleOrDefaultAsync(m => m.Name == skillName).Result;
             return skill;
         }
 
@@ -57,9 +57,9 @@ namespace SoaWebsite.Web.Services
             _context.SaveChanges();
         }
 
-        public async Task<DeveloperSkill> GetDeveloperSkill(int? idDeveloper, int? idSkill)
+        public DeveloperSkill GetDeveloperSkill(int? idDeveloper, int? idSkill)
         {
-            Developer developer = await DeveloperWithSkillsById(idDeveloper);
+            Developer developer = DeveloperWithSkillsById(idDeveloper);
             if (idSkill != null && developer != null)
             {
                 DeveloperSkill developerSkill = developer.DeveloperSkills
@@ -84,10 +84,10 @@ namespace SoaWebsite.Web.Services
             _context.SaveChanges();
         }
 
-        public async Task<bool> AddSkill(int? idDeveloper, Skill skill)
+        public bool AddSkill(int? idDeveloper, Skill skill)
         {
-            Developer developer = await DeveloperWithSkillsById(idDeveloper);
-            var remoteSkill = await SkillWithDevelopersByName(skill.Name);
+            Developer developer = DeveloperWithSkillsById(idDeveloper);
+            var remoteSkill = SkillWithDevelopersByName(skill.Name);
             if (developer != null)
             {
                 if (remoteSkill == null)
@@ -114,9 +114,9 @@ namespace SoaWebsite.Web.Services
             return false;
         }
 
-        public async Task<bool> TryRemoveSkill(int? id, int? s)
+        public bool TryRemoveSkill(int? id, int? s)
         {
-            Developer developer = await DeveloperWithSkillsById(id);
+            Developer developer = DeveloperWithSkillsById(id);
             if (developer != null)
             {
                 var developerSkill = developer.DeveloperSkills
@@ -153,7 +153,7 @@ namespace SoaWebsite.Web.Services
         public void Update(Developer developer)
         {
             _context.Update(developer);
-             _context.SaveChanges();
+            _context.SaveChanges();
         }
         public bool DeveloperExists(int id)
         {

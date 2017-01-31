@@ -16,7 +16,7 @@ namespace SoaWebsite.Tests
     public class DeveloperServiceTests
     {
         [Test]
-        public async Task GivenADeveloperID_WhenICallDeveloperById_ThenItReturnsTheDeveloper()
+        public void GivenADeveloperID_WhenICallDeveloperById_ThenItReturnsTheDeveloper()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
                 .UseInMemoryDatabase(databaseName: "develeperByID")
@@ -39,16 +39,16 @@ namespace SoaWebsite.Tests
             {
                 var id = context.Developers.Single(m => m.FirstName == "Toto").ID;
                 var service = new DeveloperService(context);
-                var actual = await service.DeveloperById(id);
+                var actual = service.DeveloperById(id);
                 Assert.AreEqual("Toto", actual.FirstName);
                 id = context.Developers.Single(m => m.FirstName == "Bob").ID;
-                actual = await service.DeveloperById(id);
+                actual = service.DeveloperById(id);
                 Assert.AreEqual("Bobby", actual.LastName);
             }
         }
 
         [Test]
-        public async Task GivenADeveloperID_WhenICallDeveloperWithSkillsById_ThenItReturnsTheDeveloperWithHisSkills()
+        public void GivenADeveloperID_WhenICallDeveloperWithSkillsById_ThenItReturnsTheDeveloperWithHisSkills()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
                 .UseInMemoryDatabase(databaseName: "develeperWithSkillsByID")
@@ -67,17 +67,17 @@ namespace SoaWebsite.Tests
                 controller.Create(developer);
                 var skill = new Skill();
                 skill.Name = "Python";
-                await controller.AddSkill(developer.ID, skill);
+                controller.AddSkill(developer.ID, skill);
             }
 
             using (var context = new DeveloperContext(options))
             {
                 var id = context.Developers.Single(m => m.FirstName == "Toto").ID;
                 var service = new DeveloperService(context);
-                var actual = await service.DeveloperWithSkillsById(id);
+                var actual = service.DeveloperWithSkillsById(id);
                 Assert.AreEqual("Toto", actual.FirstName);
                 id = context.Developers.Single(m => m.FirstName == "Bob").ID;
-                actual = await service.DeveloperWithSkillsById(id);
+                actual = service.DeveloperWithSkillsById(id);
                 Assert.AreEqual("Bobby", actual.LastName);
                 Assert.AreEqual("Python", actual.DeveloperSkills.Single().Skill.Name);
             }
