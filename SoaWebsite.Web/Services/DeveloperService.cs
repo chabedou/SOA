@@ -14,7 +14,7 @@ namespace SoaWebsite.Web.Services
     {
         private readonly DeveloperContext _context;
 
-        public DeveloperService(DeveloperContext context) : base(typeof(DeveloperService),typeof(Developer),new ServiceLifetime())
+        public DeveloperService(DeveloperContext context) : base(typeof(DeveloperService),typeof(DeveloperService),new ServiceLifetime())
         {
             _context = context;
         }

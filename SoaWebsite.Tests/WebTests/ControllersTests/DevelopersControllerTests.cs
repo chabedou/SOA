@@ -15,16 +15,21 @@ namespace SoaWebsite.Tests
     [TestFixture]
     public class DevelopersControllerTests
     {
+        public DbContextOptions<DeveloperContext> GetOptions(string databaseName)
+        {
+            var options = new DbContextOptionsBuilder<DeveloperContext>()
+                .UseInMemoryDatabase(databaseName: databaseName)
+                .Options;
+            return options;
+        }
         [Test]
         public void GivenADeveloper_WhenICallCreate_ThenTheDatabaseIsUpdated()
         {
-            var options = new DbContextOptionsBuilder<DeveloperContext>()
-                .UseInMemoryDatabase(databaseName: "Add_writes_to_database")
-                .Options;
+            var options = GetOptions("Add_writes_to_database");
 
             using (var context = new DeveloperContext(options))
             {
-                var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var controller = new DevelopersController(service);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
@@ -43,13 +48,11 @@ namespace SoaWebsite.Tests
         [Test]
         public void GivenASkill_WhenICallAddSkill_ThenItUpdatesTheDatabase()
         {
-            var options = new DbContextOptionsBuilder<DeveloperContext>()
-                .UseInMemoryDatabase(databaseName: "AddSkill_writes_to_database")
-                .Options;
+            var options = GetOptions("AddSkill_writes_to_database");
 
             using (var context = new DeveloperContext(options))
             {
-                 var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var controller = new DevelopersController(service);
                 var developer = new Developer();
 
@@ -74,13 +77,11 @@ namespace SoaWebsite.Tests
         [Test]
         public void GivenAnExistingDeveloper_WhenICallEdit_ItUpdatesTheDatabase()
         {
-            var options = new DbContextOptionsBuilder<DeveloperContext>()
-                .UseInMemoryDatabase(databaseName: "Edit")
-                .Options;
+            var options = GetOptions("Edit");
 
             using (var context = new DeveloperContext(options))
             {
-                 var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var controller = new DevelopersController(service);
                 var developer = new Developer();
 
@@ -97,7 +98,7 @@ namespace SoaWebsite.Tests
             {
                 var developer = context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
                                               .SingleOrDefaultAsync(m => m.FirstName == "Toto").Result;
-                var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var controller = new DevelopersController(service);
                 developer.FirstName = "Bob";
                 developer.LastName = "Bobby";
@@ -117,13 +118,11 @@ namespace SoaWebsite.Tests
         [Test]
         public void GivenAnExistingSkill_WhenICallDeleteSkillConfirmed_ItIsRemovedFromTheDatabase()
         {
-            var options = new DbContextOptionsBuilder<DeveloperContext>()
-                .UseInMemoryDatabase(databaseName: "DeleteSkillConfirmed_updates_database")
-                .Options;
+            var options = GetOptions("DeleteSkillConfirmed_updates_database");
 
             using (var context = new DeveloperContext(options))
             {
-                 var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var controller = new DevelopersController(service);
                 var developer = new Developer();
 
@@ -150,7 +149,7 @@ namespace SoaWebsite.Tests
                 var java = developer.DeveloperSkills.Where(m => m.Skill.Name == "Java").Single().Skill;
                 Assert.AreEqual("Java", java.Name);
 
-                var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var controller = new DevelopersController(service);
                 controller.DeleteSkillConfirmed(developer.ID, python.ID);
                 Assert.AreEqual(1, developer.DeveloperSkills.Count());
