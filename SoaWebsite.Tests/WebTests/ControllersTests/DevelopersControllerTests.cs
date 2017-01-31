@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SoaWebsite.Web.Models;
+using SoaWebsite.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace SoaWebsite.Tests
@@ -23,7 +24,8 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var controller = new DevelopersController(context);
+                var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
@@ -47,7 +49,8 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var controller = new DevelopersController(context);
+                 var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 var developer = new Developer();
 
                 developer.FirstName = "Toto";
@@ -77,7 +80,8 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var controller = new DevelopersController(context);
+                 var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 var developer = new Developer();
 
                 developer.FirstName = "Toto";
@@ -93,7 +97,8 @@ namespace SoaWebsite.Tests
             {
                 var developer = context.Developers.Include(d => d.DeveloperSkills).ThenInclude(x => x.Skill)
                                               .SingleOrDefaultAsync(m => m.FirstName == "Toto").Result;
-                var controller = new DevelopersController(context);
+                var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 developer.FirstName = "Bob";
                 developer.LastName = "Bobby";
                 controller.Edit(developer.ID, developer);
@@ -118,7 +123,8 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var controller = new DevelopersController(context);
+                 var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 var developer = new Developer();
 
                 developer.FirstName = "Toto";
@@ -144,7 +150,8 @@ namespace SoaWebsite.Tests
                 var java = developer.DeveloperSkills.Where(m => m.Skill.Name == "Java").Single().Skill;
                 Assert.AreEqual("Java", java.Name);
 
-                var controller = new DevelopersController(context);
+                var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 controller.DeleteSkillConfirmed(developer.ID, python.ID);
                 Assert.AreEqual(1, developer.DeveloperSkills.Count());
                 Assert.AreEqual(0, python.DeveloperSkills.Count());
