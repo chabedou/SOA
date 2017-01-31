@@ -24,7 +24,8 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var controller = new DevelopersController(context);
+                var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
@@ -56,7 +57,8 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var controller = new DevelopersController(context);
+                var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
@@ -84,7 +86,7 @@ namespace SoaWebsite.Tests
         }
 
         [Test]
-        public async Task GivenASkillName_WhenICallSkillWithDevelopersByName_ThenItReturnsTheSkill()
+        public void GivenASkillName_WhenICallSkillWithDevelopersByName_ThenItReturnsTheSkill()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
                 .UseInMemoryDatabase(databaseName: "SkillWithDevelopersByName")
@@ -95,30 +97,31 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var controller = new DevelopersController(context);
+                var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
                 controller.Create(developer);
 
                 
-                await controller.AddSkill(developer.ID, python);
+                controller.AddSkill(developer.ID, python);
                 var skill = new Skill();
                 skill.Name = "Java";
-                await controller.AddSkill(developer.ID, skill);
+                controller.AddSkill(developer.ID, skill);
             }
 
             using (var context = new DeveloperContext(options))
             {
                 var service = new DeveloperService(context);
-                var skill = await service.SkillWithDevelopersByName("Python");
+                var skill = service.SkillWithDevelopersByName("Python");
                 Assert.AreEqual(python.Name, skill.Name);
                 Assert.AreEqual("Toto", skill.DeveloperSkills.Single().Developer.FirstName);
             }
         }
 
         [Test]
-        public async Task GivenANonExistentSkillName_WhenICallSkillWithDevelopersByName_ThenItReturnsNull()
+        public void GivenANonExistentSkillName_WhenICallSkillWithDevelopersByName_ThenItReturnsNull()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
                 .UseInMemoryDatabase(databaseName: "SkillWithDevelopersByNameNull")
@@ -129,23 +132,24 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var controller = new DevelopersController(context);
+                var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
                 controller.Create(developer);
 
                 
-                await controller.AddSkill(developer.ID, python);
+                controller.AddSkill(developer.ID, python);
                 var skill = new Skill();
                 skill.Name = "Java";
-                await controller.AddSkill(developer.ID, skill);
+                controller.AddSkill(developer.ID, skill);
             }
 
             using (var context = new DeveloperContext(options))
             {
                 var service = new DeveloperService(context);
-                var skill = await service.SkillWithDevelopersByName("C#");
+                var skill = service.SkillWithDevelopersByName("C#");
                 Assert.AreEqual(null, skill);
             }
         }
@@ -173,7 +177,7 @@ namespace SoaWebsite.Tests
         }
 
         [Test]
-        public async Task GivenADeveloperIdAndASkillId_WhenICallGetDeveloperSkill_ThenIGetTheDeveloperSkill()
+        public void GivenADeveloperIdAndASkillId_WhenICallGetDeveloperSkill_ThenIGetTheDeveloperSkill()
         {
             var options = new DbContextOptionsBuilder<DeveloperContext>()
                 .UseInMemoryDatabase(databaseName: "DeveloperSkill")
@@ -184,16 +188,17 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var controller = new DevelopersController(context);
+                var service=new DeveloperService(context);
+                var controller = new DevelopersController(service);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
                 controller.Create(developer);
                 
-                await controller.AddSkill(developer.ID, python);
+                controller.AddSkill(developer.ID, python);
                 var skill = new Skill();
                 skill.Name = "Java";
-                await controller.AddSkill(developer.ID, skill);
+                controller.AddSkill(developer.ID, skill);
             }
 
             using (var context = new DeveloperContext(options))
