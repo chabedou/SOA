@@ -17,6 +17,12 @@ namespace SoaWebsite.Web.Services
         {
             _context = context;
         }
+
+        public IEnumerable<Developer> GetAllDevelopers()
+        {
+            return _context.Developers;
+        }
+
         public Developer DeveloperWithSkillsById(int? idDeveloper)
         {
             if (idDeveloper != null)

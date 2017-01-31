@@ -10,6 +10,20 @@ using SoaWebsite.Web.Services;
 
 namespace SoaWebsite.Web.Controllers
 {
+    [Route("api/[controller]")]
+    public class TodoController : Controller
+    {
+        private readonly DeveloperService service;
+        public TodoController(DeveloperContext context)
+        {
+            service = new DeveloperService(context);
+        }
+        [HttpGet]
+        public IEnumerable<Developer> GetPeopleViaJson()
+        {
+            return service.GetAllDevelopers();
+        }
+    }
     public class DevelopersController : Controller
     {
         private readonly DeveloperService service;
@@ -18,6 +32,14 @@ namespace SoaWebsite.Web.Controllers
         {
             service = new DeveloperService(context);
         }
+
+        
+
+       /* public IActionResult GetPeopleViaJsonDotNet()
+        {
+            return Content(JsonConvert.SerializeObject(service.GetAllDevelopers()), "application/json");
+        }*/
+
         public IActionResult Index(string sortOrder, string[] selectedSkills)
         {
             sortOrder = sortOrder == null ? "FirstName.desc" : sortOrder;
