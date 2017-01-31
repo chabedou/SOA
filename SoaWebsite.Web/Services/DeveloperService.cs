@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Web.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SoaWebsite.Web.Services
 {
-    public class DeveloperService
+    public class DeveloperService : ServiceDescriptor
     {
         private readonly DeveloperContext _context;
 
-        public DeveloperService(DeveloperContext context)
+        public DeveloperService(DeveloperContext context) : base(typeof(DeveloperService),typeof(Developer),new ServiceLifetime())
         {
             _context = context;
         }

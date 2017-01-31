@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SoaWebsite.Web.Models;
 using Microsoft.EntityFrameworkCore;
+using SoaWebsite.Web.Services;
 
 
 namespace SoaWebsite.Web
@@ -34,6 +35,7 @@ namespace SoaWebsite.Web
             services.AddMvc();
             services.AddDbContext<DeveloperContext>(options =>
                                          options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<DeveloperService,DeveloperService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -14,9 +14,9 @@ namespace SoaWebsite.Web.Controllers
     {
         private readonly DeveloperService service;
 
-        public DevelopersController(DeveloperContext context)
+        public DevelopersController(DeveloperService _service)
         {
-            service = new DeveloperService(context);
+            service = _service;
         }
         public IActionResult Index(string sortOrder, string[] selectedSkills)
         {
