@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SoaWebsite.Common;
 using Newtonsoft.Json;
+using SoaWebsite.Web.ViewModels;
+
 
 namespace SoaWebsite.Web.Controllers
 {
@@ -18,16 +20,28 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Skills matcher helps you find developers with given skills";
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "You can send us an email or a mail";
 
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Contact(ContactViewModel vm)
+        {
+            if(ModelState.IsValid)
+            {
+                // here we use an stmp server to send email
+                ViewBag.Message = "Thank you for Contacting us ";
+                return Redirect("Index");        
+            }
+            return View(vm);
         }
 
         public IActionResult Error()
