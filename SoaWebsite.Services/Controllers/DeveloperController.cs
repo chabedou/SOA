@@ -27,12 +27,26 @@ namespace SoaWebsite.Services.Controllers
             return service.GetAllDevelopers();
         }
         
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public Developer DeveloperById(int id)
         {
             var developer = _context.Developers
                                     .SingleOrDefault(m => m.ID == id);
             return developer;
+        }
+
+        [HttpPost("delete")]
+        public IActionResult DeleteDeveloperById([FromBody]int id)
+        {
+            var developer = DeveloperById(id);
+            if (developer == null)
+            {
+                return BadRequest();
+            }
+            _context.Developers.Remove(developer);
+            _context.SaveChanges();
+
+            return Ok();
         }
     }
 }

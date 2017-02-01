@@ -1,4 +1,4 @@
-/*using System;
+using System;
 using SoaWebsite.Web.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,4 +42,4 @@ namespace SoaWebsite.Web.Services
             return s => condition(s.LastName) || condition(s.FirstName);
         }
     }
-}*/
+}
