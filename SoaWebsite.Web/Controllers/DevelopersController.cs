@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Web.Models;
 using SoaWebsite.Web.Services;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace SoaWebsite.Web.Controllers
 {
@@ -57,11 +60,17 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Developer developer)
+        public async Task<IActionResult> Create(Developer developer)
         {
             if (ModelState.IsValid)
             {
-                service.AddDeveloper(developer);
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri("http://localhost:5555/");
+                HttpResponseMessage response = await client.PostAsync("api/developer/create", new StringContent(JsonConvert.SerializeObject(developer), Encoding.UTF8, "application/json"));
+                response.EnsureSuccessStatusCode();
+
+                // Return the URI of the created resource.
+                
                 return RedirectToAction("Index");
             }
             return View(developer);

@@ -51,6 +51,17 @@ namespace SoaWebsite.Services.Controllers
             return Ok();
         }
 
+        [HttpPost("developer/create")]
+        public IActionResult AddDeveloper([FromBody]Developer developer)
+        {
+            developer.DeveloperSkills = new List<DeveloperSkill>();
+            _context.Developers.Add(developer);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpGet("skill")]
         public IEnumerable<Skill> GetAllSkills()
         {
             return _context.Skills;
