@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using SoaWebsite.Web.Models;
 using SoaWebsite.Services.Services;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace SoaWebsite.Services
 {
@@ -35,6 +36,9 @@ namespace SoaWebsite.Services
             services.AddMvc( config => {
                 config.OutputFormatters.Add(new XmlSerializerOutputFormatter());
             });
+            services.AddMvc().AddJsonOptions(options => {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
             services.AddDbContext<DeveloperContext>(options =>
                                          options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<DeveloperService,DeveloperService>();
@@ -45,7 +49,6 @@ namespace SoaWebsite.Services
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
             app.UseMvc();
         }
     }

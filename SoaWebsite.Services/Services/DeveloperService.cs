@@ -163,6 +163,7 @@ namespace SoaWebsite.Services.Services
             _context.Update(developer);
             _context.SaveChanges();
         }
+        
         public bool DeveloperExists(int id)
         {
             return _context.Developers.Any(e => e.ID == id);

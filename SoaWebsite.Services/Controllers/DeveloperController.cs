@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace SoaWebsite.Services.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     public class DeveloperController : Controller
     {
         private readonly DeveloperService service;
@@ -27,15 +27,17 @@ namespace SoaWebsite.Services.Controllers
             return service.GetAllDevelopers();
         }
         
-        [HttpGet("id/{id}")]
+        [HttpGet("developer/id/{id}")]
         public Developer DeveloperById(int id)
         {
             var developer = _context.Developers
+                                    .Include(d => d.DeveloperSkills)
+                                    .ThenInclude(x => x.Skill)
                                     .SingleOrDefault(m => m.ID == id);
             return developer;
         }
 
-        [HttpPost("delete")]
+        [HttpPost("developer/delete")]
         public IActionResult DeleteDeveloperById([FromBody]int id)
         {
             var developer = DeveloperById(id);
@@ -47,6 +49,36 @@ namespace SoaWebsite.Services.Controllers
             _context.SaveChanges();
 
             return Ok();
+        }
+
+        public IEnumerable<Skill> GetAllSkills()
+        {
+            return _context.Skills;
+        }
+
+        [HttpGet("skill/id/{id}")]
+        public Skill SkillById(int id)
+        {
+            Skill skill = _context.Skills
+                            .SingleOrDefault(m => m.ID == id);
+            return skill;
+        }
+
+        [HttpGet("skill/name/{skillname}")]
+        public Skill GetSkillByName(string skillName)
+        {
+            Skill skill = _context.Skills
+                            .SingleOrDefault(m => m.Name == skillName);
+            return skill;
+        }
+
+        [HttpGet("skill/developer/{id}")]
+        public IEnumerable<Skill> GetSkillsByDeveloperId(int id)
+        {
+            Developer dev = DeveloperById(id);
+            var devskill = dev.DeveloperSkills;
+            var skills = devskill.Select(d => d.Skill);
+            return skills;
         }
     }
 }

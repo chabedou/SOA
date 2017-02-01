@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,5 +42,17 @@ namespace SoaWebsite.Services.Controllers
                             .SingleOrDefault(m => m.Name == skillName);
             return skill;
         }
+
+        [HttpGet("developer/{id}")]
+        public IEnumerable<Skill> GetDeveloperSkillsById(int id)
+        {
+            /*var skills = _context.DeveloperSk
+                                 .Include(s => s.DeveloperSkills)
+                                 .ThenInclude(d => d.DeveloperId)
+                                 .Select(d => d.DeveloperSkills);
+            Developer dev = G
+            DeveloperSkill devskill = 
+            return skills;
+        }
     }
-}
+}*/
