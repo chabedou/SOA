@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SoaWebsite.Web.Models;
+using SoaWebsite.Services.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace SoaWebsite.Services
 {
@@ -32,6 +35,9 @@ namespace SoaWebsite.Services
             services.AddMvc( config => {
                 config.OutputFormatters.Add(new XmlSerializerOutputFormatter());
             });
+            services.AddDbContext<DeveloperContext>(options =>
+                                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<DeveloperService,DeveloperService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
