@@ -156,7 +156,6 @@ namespace SoaWebsite.Web.Services
         {
             return _context.Skills.Any(e => e.ID == id);
         }
-
         public void Update(Developer developer)
         {
             _context.Update(developer);

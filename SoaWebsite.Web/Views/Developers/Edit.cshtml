@@ -1,8 +1,4 @@
-@model SoaWebsite.Web.Models.Developer
-
-@{
-    ViewData["Title"] = "Edit";
-}
+@model SoaWebsite.Web.Models.Developer @{ ViewData["Title"] = "Edit"; }
 
 <h2>Edit</h2>
 
@@ -11,7 +7,7 @@
         <h4>Developer</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="ID" />
         <div class="form-group">
             <label asp-for="FirstName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -53,6 +49,4 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+@section Scripts { @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} }

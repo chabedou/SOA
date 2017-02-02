@@ -1,0 +1,19 @@
+@model SoaWebsite.Web.Models.Skill
+
+
+<div class="form-horizontal">
+@using (Html.BeginForm()) { 
+     @Html.AntiForgeryToken() 
+     @Html.ValidationSummary(true) 
+     @Html.HiddenFor(model => model.ID)
+     @Html.EditorFor(model => model.Name) 
+     @Html.ValidationMessageFor(model => model.Name)
+     <input type="submit" value="+" class="btn btn-success" />
+}
+</div>
+
+@section Scripts { 
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+    } 
+}

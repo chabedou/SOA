@@ -1,0 +1,85 @@
+@model SoaWebsite.Web.ViewModels.MainViewModel 
+@{
+     ViewData["Title"] = "Skills matcher"; 
+    }
+
+<h2>Main view</h2>
+
+<div>
+    <hr />
+    <h4>All the following skills</h4>
+    <dl class="dl-horizontal">
+        @foreach (var item in Model.AllSkills) {
+        <td>
+            @item | <a asp-action="DeleteSkill">Delete</a> |
+        </td>
+        }
+        <a asp-action="DeleteSkill">Add</a>
+    </dl>
+</div>
+
+<div>
+    <hr />
+    <h4>One of the following skills</h4>
+    <dl class="dl-horizontal">
+        @foreach (var item in Model.OneOfSkills) {
+        <td>
+            @item | <a asp-action="DeleteSkill">Delete</a> |
+        </td>
+        }
+        <a asp-action="AddSkill">Add</a>
+    </dl>
+</div>
+
+<table class="table">
+    <hr />
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SelectedForEdit.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SelectedForEdit.LastName)
+            </th>
+            <th> skills </th>
+            <th> Actions </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Developers) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @foreach(var skillDev in item.DeveloperSkills){
+                <li> @skillDev.Skill.Name 
+                    [<a asp-action="DeleteSkill" asp-route-idDeveloper="@skillDev.DeveloperId" asp-route-idSkill="@skillDev.Skill.ID">X</a>]
+                </li>
+                } 
+                @{
+                    Html.RenderPartial("AddSkill", new SoaWebsite.Web.Models.Skill());
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-idDeveloper="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-idDeveloper="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-idDeveloper="@item.ID">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@{ 
+    if(Model.SelectedForDetails!=null) 
+    { 
+        Html.RenderPartial("Details", @Model.SelectedForDetails); 
+    } 
+    if(Model.SelectedForEdit!=null)
+    { Html.RenderPartial("Edit", @Model.SelectedForEdit); 
+    }
+}
