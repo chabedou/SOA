@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SoaWebsite.Common.Contracts;
+using SoaWebsite.Services.Models;
 
 namespace SoaWebsite.Services.Services
 {
@@ -14,9 +15,9 @@ namespace SoaWebsite.Services.Services
             this.skills = skills;
         }
 
-        public Func<IDeveloper, bool> Condition()
+        public Func<Developer, bool> Condition()
         {
-            Func<IDeveloper, bool> filter = s =>
+            Func<Developer, bool> filter = s =>
             {
                 var hasAllSkills = true;
                 if (skills != null && skills.Length != 0)
@@ -30,13 +31,13 @@ namespace SoaWebsite.Services.Services
             };
             return filter;
         }
-        private static Func<IDeveloper, bool> ConditionSkill(string bySkill)
+        private static Func<Developer, bool> ConditionSkill(string bySkill)
         {
-            Func<IDeveloperSkill, bool> condition = s => s.ISkill().Name.Contains(bySkill);
+            Func<DeveloperSkill, bool> condition = s => s.Skill().Name.Contains(bySkill);
             return s => s.GetDeveloperSkills().Count() == 0 || s.GetDeveloperSkills().Where(condition).Count() > 0;
         }
 
-        private static Func<IDeveloper, bool> ConditionName(string byName)
+        private static Func<Developer, bool> ConditionName(string byName)
         {
             Func<string, bool> condition = s => s.Contains(byName);
             return s => condition(s.LastName) || condition(s.FirstName);

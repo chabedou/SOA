@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Common.Contracts;
-using SoaWebsite.Common.Contracts;
+using SoaWebsite.Services.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace SoaWebsite.Web.Controllers
 {
@@ -17,10 +18,12 @@ namespace SoaWebsite.Web.Controllers
     public class DevelopersController : Controller
     {
         private readonly IDeveloperService service;
+        private readonly ILogger logger;
 
-        public DevelopersController(IDeveloperService service)
+        public DevelopersController(IDeveloperService service, ILogger<DevelopersController> logger)
         {
             this.service = service;
+            this.logger = logger;
         }
 
         public IActionResult Index(string sortOrder, string[] selectedSkills)
@@ -57,7 +60,7 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddSkill(int? idDeveloper, [Bind("Name")] ISkill skill)
+        public IActionResult AddSkill(int? idDeveloper, [Bind("Name")] Skill skill)
         {
             if (idDeveloper == null)
             {

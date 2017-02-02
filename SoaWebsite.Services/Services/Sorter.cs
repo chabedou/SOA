@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SoaWebsite.Common.Contracts;
+using SoaWebsite.Services.Models;
 
 namespace SoaWebsite.Services.Services
 {
@@ -16,7 +17,7 @@ namespace SoaWebsite.Services.Services
             field = parameters[0];
             order = parameters.Length == 1 ? "asc" : parameters[1];
         }
-        private static Func<IDeveloper, Object> Field(string field)
+        private static Func<Developer, Object> Field(string field)
         {
             if (field == "FirstName")
             {
@@ -27,9 +28,9 @@ namespace SoaWebsite.Services.Services
                 return item => item.LastName;
             }
         }
-        public IOrderedEnumerable<IDeveloper> Sort(IEnumerable<IDeveloper> developers)
+        public IOrderedEnumerable<Developer> Sort(IEnumerable<Developer> developers)
         {
-            Func<IDeveloper, Object> property = Field(field);
+            Func<Developer, Object> property = Field(field);
             if (order == "asc")
             {
                 return developers.OrderBy(property);

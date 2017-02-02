@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SoaWebsite.Services.Models;
+using SoaWebsite.Common.Models;
 using SoaWebsite.Services.Services;
 using SoaWebsite.Common.Contracts;
 
@@ -23,7 +23,7 @@ namespace SoaWebsite.Services.Controllers
             _context = context;
         }
         [HttpGet]
-        public IEnumerable<IDeveloper> GetAllDevelopers()
+        public IEnumerable<Developer> GetAllDevelopers()
         {
             return service.GetAllDevelopers();
         }

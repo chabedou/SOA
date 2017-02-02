@@ -1,13 +1,9 @@
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SoaWebsite.Common.Contracts;
-using System;
-using System.Linq;
 
-namespace SoaWebsite.Services.Models
+namespace SoaWebsite.Common.Models
 {
-    public class Skill : ISkill
+    public class Skill
     {
         [Key]
         public int ID { get; set; }
@@ -17,11 +13,7 @@ namespace SoaWebsite.Services.Models
         [Display(Name = "Skill name:")]
         [RegularExpression("^([a-zA-Z0-9 .&#+'-]+)$")]
         public string Name { get; set; }
-        public  List<DeveloperSkill> DeveloperSkills { get; set; }
 
-        public List<IDeveloperSkill> GetDeveloperSkills()
-        {
-            return DeveloperSkills.Select(x=> x as IDeveloperSkill).ToList();
-        }
+        public  List<DeveloperSkill> DeveloperSkills { get; set; }
     }
 }

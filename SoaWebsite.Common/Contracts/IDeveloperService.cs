@@ -1,32 +1,33 @@
 using System.Collections.Generic;
+using SoaWebsite.Common.Models;
 
 namespace SoaWebsite.Common.Contracts
 {
     public interface IDeveloperService
     {
-        IEnumerable<IDeveloper> GetAllDevelopers();
+        IEnumerable<Developer> GetAllDevelopers();
 
-        IDeveloper DeveloperWithSkillsById(int? idDeveloper);
+        Developer DeveloperWithSkillsById(int? idDeveloper);
 
-        IDeveloper DeveloperById(int? idDeveloper);
+        Developer DeveloperById(int? idDeveloper);
 
-        ISkill SkillWithDevelopersByName(string skillName);
+        Skill SkillWithDevelopersByName(string skillName);
 
-        void AddDeveloper(IDeveloper developer);
+        void AddDeveloper(Developer developer);
 
-        IDeveloperSkill GetDeveloperSkill(int? idDeveloper, int? idSkill);
+        DeveloperSkill GetDeveloperSkill(int? idDeveloper, int? idSkill);
 
-        void RemoveDeveloper(IDeveloper developer);
+        void RemoveDeveloper(Developer developer);
 
-        bool AddSkill(int? idDeveloper, ISkill skill);
+        bool AddSkill(int? idDeveloper, Skill skill);
 
         bool TryRemoveSkill(int? id, int? s);
 
-        IEnumerable<IDeveloper> FindDevelopers(string[] skills, string sortOrder);
+        IEnumerable<Developer> FindDevelopers(string[] skills, string sortOrder);
 
         bool SkillExists(int id);
 
-        void Update(IDeveloper developer);
+        void Update(Developer developer);
 
         bool DeveloperExists(int id);
 

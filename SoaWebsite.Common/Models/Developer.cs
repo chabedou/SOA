@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using SoaWebsite.Common.Contracts;
 
-namespace SoaWebsite.Services.Models
+namespace SoaWebsite.Common.Models
 {
-    public class Developer : IDeveloper
+    public class Developer
     {
         [Key]
         public int ID { get; set; }
@@ -22,12 +19,7 @@ namespace SoaWebsite.Services.Models
         [Display(Name = "Last Name:")]
         [RegularExpression("^([a-zA-Z]+[,.]?[ ]?|[a-zA-Z]+['-]?)+$", ErrorMessage = "Invalid last name, only alpha characters, \"-\", \",\", and \".\" are allowed")]
         public string LastName { get; set; }
-        public List<DeveloperSkill> DeveloperSkills { get; set; }
 
-        List<IDeveloperSkill> IDeveloper.GetDeveloperSkills()
-        {
-            return DeveloperSkills.Select(x=> x as IDeveloperSkill).ToList();
-        }
-        
+        public List<DeveloperSkill> DeveloperSkills { get; set; }
     }
 }
