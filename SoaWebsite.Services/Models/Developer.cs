@@ -28,5 +28,6 @@ namespace SoaWebsite.Services.Models
         {
             return DeveloperSkills.Select(x=> x as IDeveloperSkill).ToList();
         }
+        
     }
 }

@@ -26,7 +26,7 @@ namespace SoaWebsite.Services.Services
             return _context.Developers;
         }
 
-        public IDeveloper DeveloperWithSkillsById(int? idDeveloper)
+        private Developer DeveloperWithSkillsById(int? idDeveloper)
         {
             if (idDeveloper != null)
             {
@@ -50,7 +50,7 @@ namespace SoaWebsite.Services.Services
             return null;
         }
 
-        public ISkill SkillWithDevelopersByName(string skillName)
+        private Skill SkillWithDevelopersByName(string skillName)
         {
             Skill skill = _context.Skills
                             .Include(s => s.DeveloperSkills)
@@ -97,8 +97,9 @@ namespace SoaWebsite.Services.Services
 
         public bool AddSkill(int? idDeveloper, ISkill skill)
         {
-            Developer developer = (Developer)DeveloperWithSkillsById(idDeveloper);
-            Skill remoteSkill = (Skill)SkillWithDevelopersByName(skill.Name);
+            Developer developer = DeveloperWithSkillsById(idDeveloper);
+            
+            Skill remoteSkill = SkillWithDevelopersByName(skill.Name);
             if (developer != null)
             {
                 if (remoteSkill == null)
@@ -112,7 +113,7 @@ namespace SoaWebsite.Services.Services
                 {
                     DeveloperId = developer.ID,
                     SkillId = remoteSkill.ID,
-                    Skill = (Skill)remoteSkill,
+                    Skill = remoteSkill,
                     Developer = developer
                 };
                 developer.DeveloperSkills.Add(developerSkill);
@@ -175,6 +176,16 @@ namespace SoaWebsite.Services.Services
         public List<string> Skills()
         {
             return _context.Skills.Select(x => x.Name).ToList();
+        }
+
+        IDeveloper IDeveloperService.DeveloperWithSkillsById(int? idDeveloper)
+        {
+            return DeveloperWithSkillsById(idDeveloper);
+        }
+
+        ISkill IDeveloperService.SkillWithDevelopersByName(string skillName)
+        {
+            return SkillWithDevelopersByName(skillName);
         }
 
     }

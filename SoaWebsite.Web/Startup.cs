@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SoaWebsite.Common.Contracts;
 using SoaWebsite.Services.Services;
+using SoaWebsite.Services.Models;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -33,6 +34,8 @@ namespace SoaWebsite.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDbContext<DeveloperContext>(options =>
+                                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IDeveloperService,DeveloperService>();
         }
 
