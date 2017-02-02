@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SoaWebsite.Common.Contracts;
 
-namespace SoaWebsite.Web.Services
+namespace SoaWebsite.Services.Services
 {
     public class Filter
     {
