@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SoaWebsite.Common.Models;
-using SoaWebsite.Services.Services;
+using SoaWebsite.Common.Contracts;
 using SoaWebsite.Common.Contracts;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -41,7 +40,7 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Developer developer)
+        public async Task<IActionResult> Create(IDeveloper developer)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +57,7 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddSkill(int? idDeveloper, [Bind("Name")] Skill skill)
+        public IActionResult AddSkill(int? idDeveloper, [Bind("Name")] ISkill skill)
         {
             if (idDeveloper == null)
             {
@@ -74,7 +73,7 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Details(int? idDeveloper)
         {
-            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
+            IDeveloper developer = service.DeveloperWithSkillsById(idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -84,7 +83,7 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Edit(int? idDeveloper)
         {
-            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
+            IDeveloper developer = service.DeveloperWithSkillsById(idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -97,7 +96,7 @@ namespace SoaWebsite.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int idDeveloper, [Bind("ID,FirstName,LastName")] Developer developer)
+        public IActionResult Edit(int idDeveloper, [Bind("ID,FirstName,LastName")] IDeveloper developer)
         {
             if (idDeveloper != developer.ID)
             {
@@ -139,7 +138,7 @@ namespace SoaWebsite.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int idDeveloper)
         {
-            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
+            IDeveloper developer = service.DeveloperWithSkillsById(idDeveloper);
             if (developer != null)
             {
                 service.RemoveDeveloper(developer);

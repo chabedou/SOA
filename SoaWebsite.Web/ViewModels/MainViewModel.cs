@@ -1,5 +1,5 @@
 using System;
-using SoaWebsite.Web.Models;
+using SoaWebsite.Common.Contracts;
 using System;
 using System.Collections.Generic;
 
@@ -9,8 +9,8 @@ namespace SoaWebsite.Web.ViewModels
     {
         public List<string> OneOfSkills { get; set; }
         public List<string> AllSkills { get; set; }
-        public IEnumerable<Developer> Developers { get; set; }
-        public Developer SelectedForDetails { get; set; }
-        public Developer SelectedForEdit { get; set; }
+        public IEnumerable<IDeveloper> Developers { get; set; }
+        public IDeveloper SelectedForDetails { get; set; }
+        public IDeveloper SelectedForEdit { get; set; }
     }
 }

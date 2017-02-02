@@ -48,15 +48,5 @@ namespace SoaWebsite.Web.Controllers
         {
             return View();
         }
-
-        public IActionResult FromWebService()
-        {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5555/");
-            var request = client.GetAsync("/api/values").Result;
-            var result = request.Content.ReadAsStringAsync().Result;
-            var list = JsonConvert.DeserializeObject<List<User>>(result);
-            return View(model: list);
-        }
     }
 }

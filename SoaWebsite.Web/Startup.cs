@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SoaWebsite.Web.Models;
+using SoaWebsite.Common.Contracts;
+using SoaWebsite.Services.Services;
 using Microsoft.EntityFrameworkCore;
-using SoaWebsite.Web.Services;
 
 
 namespace SoaWebsite.Web
@@ -33,9 +33,7 @@ namespace SoaWebsite.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddDbContext<DeveloperContext>(options =>
-                                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<DeveloperService,DeveloperService>();
+            services.AddScoped<IDeveloperService,DeveloperService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

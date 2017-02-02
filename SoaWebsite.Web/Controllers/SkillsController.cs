@@ -5,22 +5,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SoaWebsite.Web.Models;
+using SoaWebsite.Common.Contracts;
 
 namespace SoaWebsite.Web.Controllers
 {
     public class SkillsController : Controller
     {
-        private DeveloperContext _context;
+        private ISkillService service;
 
-        public SkillsController(DeveloperContext context)
+        public SkillsController(ISkillService service)
         {
-            _context = context;
+            this.service = service;
         }
 
         public IActionResult Index()
         {
-            return View(_context.Skills.ToList());
+            return View();
         }
 
         public IActionResult Create()
@@ -30,12 +30,10 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Skill skill)
+        public IActionResult Create(ISkill skill)
         {
             if (ModelState.IsValid)
             {
-                _context.Skills.Add(skill);
-                _context.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -49,13 +47,7 @@ namespace SoaWebsite.Web.Controllers
                 return NotFound();
             }
 
-            var skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
-            if (skill == null)
-            {
-                return NotFound();
-            }
-
-            return View(skill);
+            return View();
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -65,12 +57,7 @@ namespace SoaWebsite.Web.Controllers
                 return NotFound();
             }
 
-            var skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
-            if (skill == null)
-            {
-                return NotFound();
-            }
-            return View(skill);
+            return View();
         }
 
         // POST: Skills/Edit/5
@@ -78,7 +65,7 @@ namespace SoaWebsite.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,LastName")] Skill skill)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,LastName")] ISkill skill)
         {
             if (id != skill.ID)
             {
@@ -89,8 +76,7 @@ namespace SoaWebsite.Web.Controllers
             {
                 try
                 {
-                    _context.Update(skill);
-                    await _context.SaveChangesAsync();
+                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -115,14 +101,7 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-
-            var Skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
-            if (Skill == null)
-            {
-                return NotFound();
-            }
-
-            return View(Skill);
+            return View();
         }
 
         // POST: Skills/Delete/5
@@ -130,15 +109,12 @@ namespace SoaWebsite.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var skill = await _context.Skills.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Skills.Remove(skill);
-            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         private bool SkillExists(int id)
         {
-            return _context.Skills.Any(e => e.ID == id);
+            return true;
         }
     }
 }

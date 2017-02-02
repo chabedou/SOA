@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "SoaWebsite.Common": "*",
+    "SoaWebsite.Services": "*",
     "Microsoft.NETCore.App": {
       "version": "1.0.1",
       "type": "platform"

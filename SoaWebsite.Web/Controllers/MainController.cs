@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SoaWebsite.Web.Models;
-using SoaWebsite.Web.Services;
+using SoaWebsite.Common.Contracts;
 using SoaWebsite.Web.ViewModels;
 
 namespace SoaWebsite.Web.Controllers
@@ -14,15 +13,15 @@ namespace SoaWebsite.Web.Controllers
 
     public class MainController : Controller
     {
-        private readonly DeveloperService service;
+        private readonly IDeveloperService service;
         private readonly MainViewModel main = new MainViewModel()
         {
             OneOfSkills = new List<string>(),
             AllSkills = new List<string>()
         };
-        public MainController(DeveloperService _service)
+        public MainController(IDeveloperService service)
         {
-            service = _service;
+            this.service = service;
         }
 
         public IActionResult Index()
@@ -42,7 +41,7 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Edit(int? idDeveloper)
         {
-            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
+            IDeveloper developer = service.DeveloperWithSkillsById(idDeveloper);
             main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             main.SelectedForEdit = developer;
             return View("Index", main);
@@ -50,7 +49,7 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int idDeveloper,[Bind("ID,FirstName,LastName")] Developer developer)
+        public IActionResult Edit(int idDeveloper,[Bind("ID,FirstName,LastName")] IDeveloper developer)
         {   
             if(idDeveloper!=developer.ID){
                 return NotFound();
@@ -88,9 +87,8 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddSkill(int? idDeveloper, [Bind("ID,Name")] Skill skill)
+        public IActionResult AddSkill(int? idDeveloper, [Bind("ID,Name")] ISkill skill)
         {
-            Console.WriteLine("Invokkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkked");
             if (idDeveloper == null)
             {
                 return NotFound();
