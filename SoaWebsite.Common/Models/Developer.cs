@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace SoaWebsite.Web.Models
+namespace SoaWebsite.Common.Models
 {
     public class Developer
     {

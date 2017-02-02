@@ -6,42 +6,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SoaWebsite.Web.Models;
-using SoaWebsite.Web.Services;
+using SoaWebsite.Common.Models;
+using SoaWebsite.Services.Services;
+using SoaWebsite.Common.Contracts;
 using System.Net.Http;
 using Newtonsoft.Json;
 
 namespace SoaWebsite.Web.Controllers
 {
-    [Route("api/[controller]")]
-    public class TodoController : Controller
-    {
-        private readonly DeveloperService service;
-        public TodoController(DeveloperContext context)
-        {
-            service = new DeveloperService(context);
-        }
-        [HttpGet]
-        public IEnumerable<Developer> GetPeopleViaJson()
-        {
-            return service.GetAllDevelopers();
-        }
-    }
+
     public class DevelopersController : Controller
     {
-        private readonly DeveloperService service;
+        private readonly IDeveloperService service;
 
-        public DevelopersController(DeveloperService _service)
+        public DevelopersController(IDeveloperService service)
         {
-            service = _service;
+            this.service = service;
         }
-
-        
-
-       /* public IActionResult GetPeopleViaJsonDotNet()
-        {
-            return Content(JsonConvert.SerializeObject(service.GetAllDevelopers()), "application/json");
-        }*/
 
         public IActionResult Index(string sortOrder, string[] selectedSkills)
         {
@@ -64,13 +45,7 @@ namespace SoaWebsite.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:5555/");
-                HttpResponseMessage response = await client.PostAsync("api/developer/create", new StringContent(JsonConvert.SerializeObject(developer), Encoding.UTF8, "application/json"));
-                response.EnsureSuccessStatusCode();
-
-                // Return the URI of the created resource.
-                
+                service.AddDeveloper(developer);   
                 return RedirectToAction("Index");
             }
             return View(developer);

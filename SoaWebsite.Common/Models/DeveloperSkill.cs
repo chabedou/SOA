@@ -1,4 +1,4 @@
-namespace SoaWebsite.Web.Models
+namespace SoaWebsite.Common.Models
 {
     public class DeveloperSkill
     {
