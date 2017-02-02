@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Services.Models;
 using SoaWebsite.Services.Services;
-using Newtonsoft.Json;
+using SoaWebsite.Common.Contracts;
+
 
 namespace SoaWebsite.Services.Controllers
 {
@@ -22,7 +23,7 @@ namespace SoaWebsite.Services.Controllers
             _context = context;
         }
         [HttpGet]
-        public IEnumerable<Developer> GetAllDevelopers()
+        public IEnumerable<IDeveloper> GetAllDevelopers()
         {
             return service.GetAllDevelopers();
         }

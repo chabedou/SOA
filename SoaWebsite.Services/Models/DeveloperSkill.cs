@@ -8,5 +8,12 @@ namespace SoaWebsite.Services.Models
         public Developer Developer { get; set; }
         public int SkillId { get; set; }
         public Skill Skill { get; set; }
+
+        public ISkill ISkill(){
+            return Skill;
+        }
+        public IDeveloper IDeveloper(){
+            return Developer;
+        }
     }
 }

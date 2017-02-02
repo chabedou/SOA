@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace SoaWebsite.Common.Contracts
 {
-    public interface IIDeveloperService
+    public interface IDeveloperService
     {
-        IEnumerable<IDeveloper> GetAllIDevelopers();
+        IEnumerable<IDeveloper> GetAllDevelopers();
 
         IDeveloper DeveloperWithSkillsById(int? idDeveloper);
 
@@ -14,9 +14,9 @@ namespace SoaWebsite.Common.Contracts
 
         void AddDeveloper(IDeveloper developer);
 
-        IDeveloperSkill GetDeveloperISkill(int? idDeveloper, int? idSkill);
+        IDeveloperSkill GetDeveloperSkill(int? idDeveloper, int? idSkill);
 
-        void RemoveIDeveloper(IDeveloper developer);
+        void RemoveDeveloper(IDeveloper developer);
 
         bool AddSkill(int? idDeveloper, ISkill skill);
 

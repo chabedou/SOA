@@ -34,9 +34,7 @@ namespace SoaWebsite.Services
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc( config => {
-                config.OutputFormatters.Add(new XmlSerializerOutputFormatter());
-            });
+            services.AddMvc();
             services.AddMvc().AddJsonOptions(options => {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });

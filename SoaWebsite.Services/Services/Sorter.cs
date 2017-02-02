@@ -1,9 +1,9 @@
-/*using System;
-using SoaWebsite.Web.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using SoaWebsite.Common.Contracts;
 
-namespace SoaWebsite.Web.Services
+namespace SoaWebsite.Services.Services
 {
     public class Sorter
     {
@@ -16,7 +16,7 @@ namespace SoaWebsite.Web.Services
             field = parameters[0];
             order = parameters.Length == 1 ? "asc" : parameters[1];
         }
-        private static Func<Developer, Object> Field(string field)
+        private static Func<IDeveloper, Object> Field(string field)
         {
             if (field == "FirstName")
             {
@@ -27,9 +27,9 @@ namespace SoaWebsite.Web.Services
                 return item => item.LastName;
             }
         }
-        public IOrderedEnumerable<Developer> Sort(IEnumerable<Developer> developers)
+        public IOrderedEnumerable<IDeveloper> Sort(IEnumerable<IDeveloper> developers)
         {
-            Func<Developer, Object> property = Field(field);
+            Func<IDeveloper, Object> property = Field(field);
             if (order == "asc")
             {
                 return developers.OrderBy(property);
@@ -45,4 +45,4 @@ namespace SoaWebsite.Web.Services
         }
 
     }
-}*/
+}
