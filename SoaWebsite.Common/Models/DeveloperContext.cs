@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 
-namespace SoaWebsite.Web.Models
+namespace SoaWebsite.Common.Models
 {
     public class DeveloperContext : DbContext
     {
