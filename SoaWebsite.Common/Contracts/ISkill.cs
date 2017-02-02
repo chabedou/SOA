@@ -1,6 +1,6 @@
 namespace SoaWebsite.Common.Contracts
 {
-    public interface ISkillService
+    public interface ISkill
     {
          
     }

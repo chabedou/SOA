@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SoaWebsite.Web.Models;
-using SoaWebsite.Web.Services;
+using SoaWebsite.Services.Models;
+using SoaWebsite.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace SoaWebsite.Services.Services
 {
-    public class DeveloperService : ServiceDescriptor
+    public class DeveloperService : ServiceDescriptor , IDeveloperService
     {
         private readonly DeveloperContext _context;
 

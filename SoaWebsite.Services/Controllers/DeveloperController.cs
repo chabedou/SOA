@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SoaWebsite.Web.Models;
+using SoaWebsite.Services.Models;
 using SoaWebsite.Services.Services;
 using Newtonsoft.Json;
 

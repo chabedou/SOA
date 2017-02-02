@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SoaWebsite.Common.Contracts;
 
-
-namespace SoaWebsite.Common.Models
+namespace SoaWebsite.Services.Models
 {
-    public class Skill
+    public class Skill : ISkill
     {
         [Key]
         public int ID { get; set; }

@@ -51,7 +51,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
-            <td>
+            <td colspan="3">
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
@@ -60,9 +60,19 @@
                     [<a asp-action="DeleteSkill" asp-route-idDeveloper="@skillDev.DeveloperId" asp-route-idSkill="@skillDev.Skill.ID">X</a>]
                 </li>
                 } 
-                @{
-                    Html.RenderPartial("AddSkill", new SoaWebsite.Web.Models.Skill());
-                }
+                <div class="form-horizontal">
+                    <form asp-controller="Main" asp-action="AddSkill" method="post" asp-route-idDeveloper="@item.ID" role="form">
+                        @{
+                        var skill=new SoaWebsite.Web.Models.Skill();
+                        @Html.AntiForgeryToken() 
+                        @Html.ValidationSummary(true) 
+                        @Html.HiddenFor(model => skill.ID)
+                        @Html.EditorFor(model => skill.Name) 
+                        @Html.ValidationMessageFor(model => skill.Name)
+                        <input type="submit" value="+" class="btn btn-success" />
+                        }
+                    </form>
+                </div>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-idDeveloper="@item.ID">Edit</a> |

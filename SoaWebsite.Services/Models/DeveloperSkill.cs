@@ -1,6 +1,8 @@
-namespace SoaWebsite.Common.Models
+using SoaWebsite.Common.Contracts;
+
+namespace SoaWebsite.Services.Models
 {
-    public class DeveloperSkill
+    public class DeveloperSkill : IDeveloperSkill
     {
         public int DeveloperId { get; set; }
         public Developer Developer { get; set; }

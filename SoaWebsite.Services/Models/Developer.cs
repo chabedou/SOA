@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SoaWebsite.Common.Contracts;
 
-namespace SoaWebsite.Common.Models
+namespace SoaWebsite.Services.Models
 {
-    public class Developer
+    public class Developer : IDeveloper
     {
         [Key]
         public int ID { get; set; }
