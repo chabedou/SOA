@@ -40,7 +40,7 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Edit(int? idDeveloper)
         {
-            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
+            Developer developer = service.DeveloperWithSkillsById((int)idDeveloper);
             main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             main.SelectedForEdit = developer;
             return View("Index", main);
@@ -92,7 +92,7 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-            var added = service.AddSkill(idDeveloper, skill);
+            var added = service.AddSkill((int)idDeveloper, skill);
             if (ModelState.IsValid && added)
             {
                 return RedirectToAction("Index");
