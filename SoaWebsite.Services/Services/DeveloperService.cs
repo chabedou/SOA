@@ -21,28 +21,28 @@ namespace SoaWebsite.Services.Services
             return _context.Developers;
         }
 
-        public Developer DeveloperWithSkillsById(int? idDeveloper)
+        public void AddDeveloper(Developer Developer)
         {
-            if (idDeveloper != null)
-            {
-                var developer = _context.Developers
+            var developer=(Developer)Developer;
+             developer.DeveloperSkills = new List<DeveloperSkill>();
+            _context.Developers.Add(developer);
+            _context.SaveChanges();
+        }
+
+        public Developer DeveloperById(int idDeveloper)
+        {
+            var developer = _context.Developers
+                                    .SingleOrDefaultAsync(m => m.ID == idDeveloper).Result;
+            return developer;
+        }
+
+        public Developer DeveloperWithSkillsById(int idDeveloper)
+        {
+            var developer = _context.Developers
                                     .Include(d => d.DeveloperSkills)
                                     .ThenInclude(d => d.Skill)
                                     .SingleOrDefaultAsync(m => m.ID == idDeveloper).Result;
-                return developer;
-            }
-            return null;
-        }
-
-        public Developer DeveloperById(int? idDeveloper)
-        {
-            if (idDeveloper != null)
-            {
-                var developer = _context.Developers
-                    .SingleOrDefaultAsync(m => m.ID == idDeveloper).Result;
-                return developer;
-            }
-            return null;
+            return developer;
         }
 
         public Skill SkillWithDevelopersByName(string skillName)
@@ -54,18 +54,12 @@ namespace SoaWebsite.Services.Services
             return skill;
         }
 
-        public void AddDeveloper(Developer Developer)
-        {
-            var developer=(Developer)Developer;
-             developer.DeveloperSkills = new List<DeveloperSkill>();
-            _context.Developers.Add(developer);
-            _context.SaveChanges();
-        }
+        
 
-        public DeveloperSkill GetDeveloperSkill(int? idDeveloper, int? idSkill)
+        public DeveloperSkill GetDeveloperSkill(int idDeveloper, int idSkill)
         {
             Developer developer = (Developer) DeveloperWithSkillsById(idDeveloper);
-            if (idSkill != null && developer != null)
+            if (developer != null)
             {
                 DeveloperSkill developerSkill =  developer.DeveloperSkills
                                     .Where(d => d.SkillId == idSkill)
@@ -90,7 +84,7 @@ namespace SoaWebsite.Services.Services
             _context.SaveChanges();
         }
 
-        public bool AddSkill(int? idDeveloper, Skill skill)
+        public bool AddSkill(int idDeveloper, Skill skill)
         {
             Developer developer = DeveloperWithSkillsById(idDeveloper);
             
@@ -121,7 +115,7 @@ namespace SoaWebsite.Services.Services
             return false;
         }
 
-        public bool TryRemoveSkill(int? id, int? s)
+        public bool TryRemoveSkill(int id, int s)
         {
             Developer developer = (Developer)DeveloperWithSkillsById(id);
             if (developer != null)
@@ -174,7 +168,7 @@ namespace SoaWebsite.Services.Services
             return _context.Skills.Select(x => x.Name).ToList();
         }
 
-        Developer IDeveloperService.DeveloperWithSkillsById(int? idDeveloper)
+        Developer IDeveloperService.DeveloperWithSkillsById(int idDeveloper)
         {
             return DeveloperWithSkillsById(idDeveloper);
         }
