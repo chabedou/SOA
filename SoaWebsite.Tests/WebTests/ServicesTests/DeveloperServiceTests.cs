@@ -21,8 +21,9 @@ namespace SoaWebsite.Tests
         {
             using (var context = new DeveloperContext(options))
             {
-                var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var developer = new Developer();
+                developer.ID = 1;
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
                 service.AddDeveloper(developer);
@@ -30,8 +31,9 @@ namespace SoaWebsite.Tests
                 secondDeveloper.FirstName = "Bob";
                 secondDeveloper.LastName = "Bobby";
                 service.AddDeveloper(secondDeveloper);
-                
+
                 var skill = new Skill();
+                skill.ID = 1;
                 skill.Name = "Java";
                 service.AddSkill(developer.ID, skill);
                 skill = new Skill();
@@ -47,7 +49,7 @@ namespace SoaWebsite.Tests
 
             using (var context = new DeveloperContext(options))
             {
-                var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
@@ -70,7 +72,7 @@ namespace SoaWebsite.Tests
             var options = GetOptions("AddSkill");
             using (var context = new DeveloperContext(options))
             {
-                var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
@@ -89,7 +91,7 @@ namespace SoaWebsite.Tests
             var options = GetOptions("AddSkillFalse");
             using (var context = new DeveloperContext(options))
             {
-                var service=new DeveloperService(context);
+                var service = new DeveloperService(context);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
@@ -192,12 +194,15 @@ namespace SoaWebsite.Tests
         [Test]
         public void GivenADeveloperIdAndASkillId_WhenICallGetDeveloperSkill_ThenIGetTheDeveloperSkill()
         {
-            var options = GetOptions("DeveloperSkill");
+            var options = GetOptions("GivenADeveloperIdAndASkillId_WhenICallGetDeveloperSkill_ThenIGetTheDeveloperSkill");
             InitializeDatabaseWithDevelopersAndSkills(options);
             using (var context = new DeveloperContext(options))
             {
                 var service = new DeveloperService(context);
                 var developerskill = service.GetDeveloperSkill(1, 1);
+                Assert.IsNotNull(developerskill);
+                Assert.IsNotNull(developerskill.Developer);
+                Assert.IsNotNull(developerskill.Skill);
                 Assert.AreEqual("Toto", developerskill.Developer.FirstName);
                 Assert.AreEqual("Java", developerskill.Skill.Name);
             }
@@ -267,7 +272,7 @@ namespace SoaWebsite.Tests
         [Test]
         public void GivenAInvalidDeveloperIdAndAValidSkillId_WhenICallTryRemoveSkill_ThenItReturnsFalse()
         {
-            var options = GetOptions("TryRemoveSkill");
+            var options = GetOptions("TryRemoveSkillInvalidDev");
             InitializeDatabaseWithDevelopersAndSkills(options);
             using (var context = new DeveloperContext(options))
             {
@@ -283,7 +288,7 @@ namespace SoaWebsite.Tests
         [Test]
         public void GivenAValidDeveloperIdAndAInvalidSkillId_WhenICallTryRemoveSkill_ThenItReturnsFalse()
         {
-            var options = GetOptions("TryRemoveSkill");
+            var options = GetOptions("TryRemoveSkillInvalidSkill");
             InitializeDatabaseWithDevelopersAndSkills(options);
             using (var context = new DeveloperContext(options))
             {

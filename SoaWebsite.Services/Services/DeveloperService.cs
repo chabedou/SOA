@@ -24,7 +24,7 @@ namespace SoaWebsite.Services.Services
         public Developer DeveloperById(int idDeveloper)
         {
             var developer = _context.Developers
-                                    .SingleOrDefaultAsync(m => m.ID == idDeveloper).Result;
+                                    .SingleOrDefault(m => m.ID == idDeveloper);
             return developer;
         }
 
@@ -33,7 +33,7 @@ namespace SoaWebsite.Services.Services
             var developer = _context.Developers
                                     .Include(d => d.DeveloperSkills)
                                     .ThenInclude(d => d.Skill)
-                                    .SingleOrDefaultAsync(m => m.ID == idDeveloper).Result;
+                                    .SingleOrDefault(m => m.ID == idDeveloper);
             return developer;
         }
 
@@ -42,7 +42,7 @@ namespace SoaWebsite.Services.Services
             Skill skill = _context.Skills
                             .Include(s => s.DeveloperSkills)
                             .ThenInclude(d => d.Developer)
-                            .SingleOrDefaultAsync(m => m.Name == skillName).Result;
+                            .SingleOrDefault(m => m.Name == skillName);
             return skill;
         }
 
