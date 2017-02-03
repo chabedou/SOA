@@ -10,5 +10,6 @@ namespace SoaWebsite.Web.ViewModels
         public IEnumerable<Developer> Developers { get; set; }
         public Developer SelectedForDetails { get; set; }
         public Developer SelectedForEdit { get; set; }
+        public Developer SelectedForCreate { get; set; }
     }
 }

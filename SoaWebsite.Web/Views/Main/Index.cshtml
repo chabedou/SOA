@@ -63,7 +63,7 @@
                 <div class="form-horizontal">
                     <form asp-controller="Main" asp-action="AddSkill" method="post" asp-route-idDeveloper="@item.ID" role="form">
                         @{
-                        var skill=new SoaWebsite.Web.Models.Skill();
+                        var skill=new SoaWebsite.Common.Models.Skill();
                         @Html.AntiForgeryToken() 
                         @Html.ValidationSummary(true) 
                         @Html.HiddenFor(model => skill.ID)
@@ -91,5 +91,9 @@
     } 
     if(Model.SelectedForEdit!=null)
     { Html.RenderPartial("Edit", @Model.SelectedForEdit); 
+    }
+    if(Model.SelectedForCreate!=null)
+    { 
+        Html.RenderPartial("Edit", new @SoaWebsite.Common.Models.Developer()); 
     }
 }
