@@ -1,4 +1,4 @@
-@model SoaWebsite.Common.Contracts.IDeveloper
+@model SoaWebsite.Common.Models.Developer
 @{ ViewData["Title"] = "Edit"; }
 
 <h2>Edit</h2>
@@ -28,9 +28,9 @@
                 <dt>
                     Skills
                 </dt>
-                @foreach (var item in Model.GetDeveloperSkills()) {
+                @foreach (var item in Model.DeveloperSkills) {
                 <dd>
-                    @Html.DisplayFor(modelItem => item.ISkill().Name) |
+                    @Html.DisplayFor(modelItem => item.Skill.Name) |
                     <a asp-action="DeleteSkill" asp-route-idDeveloper="@item.DeveloperId" asp-route-idSkill="@item.SkillId">Delete</a>
                 </dd>
                 }

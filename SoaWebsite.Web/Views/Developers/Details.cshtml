@@ -1,4 +1,4 @@
-@model SoaWebsite.Common.Contracts.IDeveloper
+@model SoaWebsite.Common.Models.Developer
 
 @{
     ViewData["Title"] = "Details";
@@ -25,9 +25,9 @@
         <dt>
             Skills
         </dt>
-        @foreach (var item in Model.GetDeveloperSkills()) {
+        @foreach (var item in Model.DeveloperSkills) {
         <dd>
-                 @Html.DisplayFor(modelItem => item.ISkill().Name)
+                 @Html.DisplayFor(modelItem => item.Skill.Name)
         </dd>
         }
     </dl>
