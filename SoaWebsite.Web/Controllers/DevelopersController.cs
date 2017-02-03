@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Common.Contracts;
 using SoaWebsite.Common.Models;
-using Microsoft.Extensions.Logging;
 
 namespace SoaWebsite.Web.Controllers
 {

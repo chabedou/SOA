@@ -1,13 +1,7 @@
 using NUnit.Framework;
-using NSubstitute;
-using SoaWebsite.Web.Controllers;
 using SoaWebsite.Common.Models;
 using SoaWebsite.Services.Services;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace SoaWebsite.Tests
@@ -28,22 +22,21 @@ namespace SoaWebsite.Tests
             using (var context = new DeveloperContext(options))
             {
                 var service=new DeveloperService(context);
-                var controller = new DevelopersController(service);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
-                controller.Create(developer);
+                service.AddDeveloper(developer);
                 var secondDeveloper = new Developer();
                 secondDeveloper.FirstName = "Bob";
                 secondDeveloper.LastName = "Bobby";
-                controller.Create(secondDeveloper);
+                service.AddDeveloper(secondDeveloper);
                 
                 var skill = new Skill();
                 skill.Name = "Java";
-                controller.AddSkill(developer.ID, skill);
+                service.AddSkill(developer.ID, skill);
                 skill = new Skill();
                 skill.Name = "C#";
-                controller.AddSkill(secondDeveloper.ID, skill);
+                service.AddSkill(secondDeveloper.ID, skill);
             }
         }
 
@@ -55,20 +48,58 @@ namespace SoaWebsite.Tests
             using (var context = new DeveloperContext(options))
             {
                 var service=new DeveloperService(context);
-                var controller = new DevelopersController(service);
                 var developer = new Developer();
                 developer.FirstName = "Toto";
                 developer.LastName = "Tata";
-                controller.Create(developer);
+                service.AddDeveloper(developer);
                 developer = new Developer();
                 developer.FirstName = "Bob";
                 developer.LastName = "Bobby";
-                controller.Create(developer);
+                service.AddDeveloper(developer);
             }
 
             using (var context = new DeveloperContext(options))
             {
                 Assert.AreEqual(2, context.Developers.Count());
+            }
+        }
+
+        [Test]
+        public void GivenAValidDeveloperIdAndASkill_WhenICallAddSkill_ThenItUpdatesTheDatabaseAndReturnsTrue()
+        {
+            var options = GetOptions("AddSkill");
+            using (var context = new DeveloperContext(options))
+            {
+                var service=new DeveloperService(context);
+                var developer = new Developer();
+                developer.FirstName = "Toto";
+                developer.LastName = "Tata";
+                service.AddDeveloper(developer);
+                var skill = new Skill();
+                skill.Name = "Python";
+                Assert.AreEqual(true, service.AddSkill(1, skill));
+                Assert.AreEqual("Python", context.Developers.Single().DeveloperSkills.Single().Skill.Name);
+                Assert.AreEqual(1, context.Skills.Count());
+            }
+        }
+
+        [Test]
+        public void GivenANonValidDeveloperIdAndASkill_WhenICallAddSkill_ThenItReturnsFalse()
+        {
+            var options = GetOptions("AddSkillFalse");
+            using (var context = new DeveloperContext(options))
+            {
+                var service=new DeveloperService(context);
+                var developer = new Developer();
+                developer.FirstName = "Toto";
+                developer.LastName = "Tata";
+                service.AddDeveloper(developer);
+                var skill = new Skill();
+                skill.Name = "Python";
+                Assert.AreEqual(false, service.AddSkill(42, skill));
+                developer = service.DeveloperWithSkillsById(1);
+                Assert.AreEqual(0, developer.DeveloperSkills.Count());
+                Assert.AreEqual(0, context.Skills.Count());
             }
         }
 
@@ -97,7 +128,7 @@ namespace SoaWebsite.Tests
             using (var context = new DeveloperContext(options))
             {
                 var service = new DeveloperService(context);
-                var actual = service.DeveloperById(65);
+                var actual = service.DeveloperById(42);
                 Assert.AreEqual(null, actual);
             }
         }
@@ -125,7 +156,7 @@ namespace SoaWebsite.Tests
             using (var context = new DeveloperContext(options))
             {
                 var service = new DeveloperService(context);
-                var actual = service.DeveloperWithSkillsById(65);
+                var actual = service.DeveloperWithSkillsById(42);
                 Assert.AreEqual(null, actual);
             }
         }
@@ -180,7 +211,7 @@ namespace SoaWebsite.Tests
             using (var context = new DeveloperContext(options))
             {
                 var service = new DeveloperService(context);
-                var developerskill = service.GetDeveloperSkill(3, 1);
+                var developerskill = service.GetDeveloperSkill(42, 1);
                 Assert.AreEqual(null, developerskill);
             }
         }
@@ -194,7 +225,7 @@ namespace SoaWebsite.Tests
             using (var context = new DeveloperContext(options))
             {
                 var service = new DeveloperService(context);
-                var developerskill = service.GetDeveloperSkill(1, 3);
+                var developerskill = service.GetDeveloperSkill(1, 42);
                 Assert.AreEqual(null, developerskill);
             }
         }
@@ -212,6 +243,56 @@ namespace SoaWebsite.Tests
                 service.RemoveDeveloper(developer);
                 Assert.AreEqual(1, context.Developers.Count());
                 Assert.AreEqual("Bob", context.Developers.Single().FirstName);
+            }
+        }
+
+        [Test]
+        public void GivenAValidDeveloperIdAndAValidSkillId_WhenICallTryRemoveSkill_ThenItUpdatesTheDatabaseAndReturnsTrue()
+        {
+            var options = GetOptions("TryRemoveSkill");
+            InitializeDatabaseWithDevelopersAndSkills(options);
+            using (var context = new DeveloperContext(options))
+            {
+                var service = new DeveloperService(context);
+                var developer = service.DeveloperWithSkillsById(1);
+                var skill = service.SkillWithDevelopersByName("Java");
+                Assert.AreEqual(1, developer.DeveloperSkills.Count());
+                Assert.AreEqual(1, skill.DeveloperSkills.Count());
+                Assert.AreEqual(true, service.TryRemoveSkill(developer.ID, skill.ID));
+                Assert.AreEqual(0, developer.DeveloperSkills.Count());
+                Assert.AreEqual(0, skill.DeveloperSkills.Count());
+            }
+        }
+
+        [Test]
+        public void GivenAInvalidDeveloperIdAndAValidSkillId_WhenICallTryRemoveSkill_ThenItReturnsFalse()
+        {
+            var options = GetOptions("TryRemoveSkill");
+            InitializeDatabaseWithDevelopersAndSkills(options);
+            using (var context = new DeveloperContext(options))
+            {
+                var service = new DeveloperService(context);
+                var developer = service.DeveloperWithSkillsById(1);
+                var skill = service.SkillWithDevelopersByName("Java");
+                Assert.AreEqual(false, service.TryRemoveSkill(42, skill.ID));
+                Assert.AreEqual(1, developer.DeveloperSkills.Count());
+                Assert.AreEqual(1, skill.DeveloperSkills.Count());
+            }
+        }
+
+        [Test]
+        public void GivenAValidDeveloperIdAndAInvalidSkillId_WhenICallTryRemoveSkill_ThenItReturnsFalse()
+        {
+            var options = GetOptions("TryRemoveSkill");
+            InitializeDatabaseWithDevelopersAndSkills(options);
+            using (var context = new DeveloperContext(options))
+            {
+                var service = new DeveloperService(context);
+                var developer = service.DeveloperWithSkillsById(1);
+                var skill = service.SkillWithDevelopersByName("Java");
+                Assert.AreEqual(false, service.TryRemoveSkill(developer.ID, 42));
+                Assert.AreEqual(1, developer.DeveloperSkills.Count());
+                Assert.AreEqual(1, skill.DeveloperSkills.Count());
             }
         }
     }
