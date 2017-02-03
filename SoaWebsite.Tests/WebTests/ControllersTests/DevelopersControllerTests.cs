@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SoaWebsite.Web.Models;
-using SoaWebsite.Web.Services;
+using SoaWebsite.Common.Models;
+using SoaWebsite.Services.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace SoaWebsite.Tests

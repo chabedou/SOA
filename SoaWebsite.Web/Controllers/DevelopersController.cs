@@ -11,12 +11,10 @@ namespace SoaWebsite.Web.Controllers
     public class DevelopersController : Controller
     {
         private readonly IDeveloperService service;
-        private readonly ILogger logger;
 
-        public DevelopersController(IDeveloperService service, ILogger<DevelopersController> logger)
+        public DevelopersController(IDeveloperService service)
         {
             this.service = service;
-            this.logger = logger;
         }
 
         public IActionResult Index(string sortOrder, string[] selectedSkills)
@@ -163,7 +161,7 @@ namespace SoaWebsite.Web.Controllers
             var removed = service.TryRemoveSkill(idDeveloper, idSkill);
             if (removed)
             {
-                return RedirectToAction("Edit", new { idDeveloper = idDeveloper });
+                return RedirectToAction("Index");
             }
             return NotFound();
         }

@@ -21,7 +21,7 @@ namespace SoaWebsite.Services.Services
             return _context.Developers;
         }
 
-        private Developer DeveloperWithSkillsById(int? idDeveloper)
+        public Developer DeveloperWithSkillsById(int? idDeveloper)
         {
             if (idDeveloper != null)
             {
@@ -45,7 +45,7 @@ namespace SoaWebsite.Services.Services
             return null;
         }
 
-        private Skill SkillWithDevelopersByName(string skillName)
+        public Skill SkillWithDevelopersByName(string skillName)
         {
             Skill skill = _context.Skills
                             .Include(s => s.DeveloperSkills)
