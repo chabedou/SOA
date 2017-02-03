@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Common.Contracts;
+using SoaWebsite.Common.Models;
+
 using SoaWebsite.Web.ViewModels;
 
 namespace SoaWebsite.Web.Controllers
@@ -41,7 +40,7 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Edit(int? idDeveloper)
         {
-            IDeveloper developer = service.DeveloperWithSkillsById(idDeveloper);
+            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
             main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             main.SelectedForEdit = developer;
             return View("Index", main);
@@ -49,7 +48,7 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int idDeveloper,[Bind("ID,FirstName,LastName")] IDeveloper developer)
+        public IActionResult Edit(int idDeveloper,[Bind("ID,FirstName,LastName")] Developer developer)
         {   
             if(idDeveloper!=developer.ID){
                 return NotFound();
@@ -87,7 +86,7 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddSkill(int? idDeveloper, [Bind("ID,Name")] ISkill skill)
+        public IActionResult AddSkill(int? idDeveloper, [Bind("ID,Name")] Skill skill)
         {
             if (idDeveloper == null)
             {

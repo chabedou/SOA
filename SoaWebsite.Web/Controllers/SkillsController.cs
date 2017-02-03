@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Common.Contracts;
+using SoaWebsite.Common.Models;
+
 
 namespace SoaWebsite.Web.Controllers
 {
@@ -30,7 +27,7 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ISkill skill)
+        public IActionResult Create(Skill skill)
         {
             if (ModelState.IsValid)
             {
@@ -40,7 +37,7 @@ namespace SoaWebsite.Web.Controllers
             return View(skill);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
@@ -50,7 +47,7 @@ namespace SoaWebsite.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -65,7 +62,7 @@ namespace SoaWebsite.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,LastName")] ISkill skill)
+        public IActionResult Edit(int id, [Bind("ID,FirstName,LastName")] Skill skill)
         {
             if (id != skill.ID)
             {
@@ -95,7 +92,7 @@ namespace SoaWebsite.Web.Controllers
         }
 
         // GET: Skills/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -107,7 +104,7 @@ namespace SoaWebsite.Web.Controllers
         // POST: Skills/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
             return RedirectToAction("Index");
         }

@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SoaWebsite.Common.Contracts;
-using SoaWebsite.Services.Models;
+using SoaWebsite.Common.Models;
 
 namespace SoaWebsite.Services.Services
 {

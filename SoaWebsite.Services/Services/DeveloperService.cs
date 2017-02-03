@@ -1,12 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Common.Models;
-using SoaWebsite.Services.Services;
 using SoaWebsite.Common.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -148,7 +143,8 @@ namespace SoaWebsite.Services.Services
         public IEnumerable<Developer> FindDevelopers(string[] skills, string sortOrder)
         {
             var filter = new Filter(skills);
-            var developers = _context.Developers.Include(d => d.DeveloperSkills)
+            var developers = _context.Developers
+                                     .Include(d => d.DeveloperSkills)
                                      .ThenInclude(x => x.Skill)
                                      .Where(filter.Condition())
                                      .Select(x => x);

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using SoaWebsite.Common.Contracts;
-using SoaWebsite.Services.Models;
+using SoaWebsite.Common.Models;
 
 namespace SoaWebsite.Services.Services
 {
@@ -33,8 +31,8 @@ namespace SoaWebsite.Services.Services
         }
         private static Func<Developer, bool> ConditionSkill(string bySkill)
         {
-            Func<DeveloperSkill, bool> condition = s => s.Skill().Name.Contains(bySkill);
-            return s => s.GetDeveloperSkills().Count() == 0 || s.GetDeveloperSkills().Where(condition).Count() > 0;
+            Func<DeveloperSkill, bool> condition = s => s.Skill.Name.Contains(bySkill);
+            return s => s.DeveloperSkills.Count() == 0 || s.DeveloperSkills.Where(condition).Count() > 0;
         }
 
         private static Func<Developer, bool> ConditionName(string byName)

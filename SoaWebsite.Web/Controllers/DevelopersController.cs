@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Common.Contracts;
-using SoaWebsite.Services.Models;
-using System.Net.Http;
-using Newtonsoft.Json;
+using SoaWebsite.Common.Models;
 using Microsoft.Extensions.Logging;
 
 namespace SoaWebsite.Web.Controllers
@@ -43,7 +36,7 @@ namespace SoaWebsite.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(IDeveloper developer)
+        public IActionResult Create(Developer developer)
         {
             if (ModelState.IsValid)
             {
@@ -76,7 +69,7 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Details(int? idDeveloper)
         {
-            IDeveloper developer = service.DeveloperWithSkillsById(idDeveloper);
+            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -86,7 +79,7 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Edit(int? idDeveloper)
         {
-            IDeveloper developer = service.DeveloperWithSkillsById(idDeveloper);
+            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -99,7 +92,7 @@ namespace SoaWebsite.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int idDeveloper, [Bind("ID,FirstName,LastName")] IDeveloper developer)
+        public IActionResult Edit(int idDeveloper, [Bind("ID,FirstName,LastName")] Developer developer)
         {
             if (idDeveloper != developer.ID)
             {
@@ -141,7 +134,7 @@ namespace SoaWebsite.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int idDeveloper)
         {
-            IDeveloper developer = service.DeveloperWithSkillsById(idDeveloper);
+            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
             if (developer != null)
             {
                 service.RemoveDeveloper(developer);
