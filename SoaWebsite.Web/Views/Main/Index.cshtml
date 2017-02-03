@@ -3,32 +3,26 @@
      ViewData["Title"] = "Skills matcher"; 
     }
 
-<h2>Main view</h2>
+<h2>Developers :</h2>
+
+    @using (Html.BeginForm()) {
+    <div>
+        <h4>Search by skills</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            @foreach (var item in ViewBag.Skills) {
+            <td>
+                <label><input type="checkbox" name="selectedSkills" value="@item"> @item</label>
+            </td>
+            }
+            <input type="submit" value="Search" />
+        </dl>
+    </div>
+    }
 
 <div>
-    <hr />
-    <h4>All the following skills</h4>
-    <dl class="dl-horizontal">
-        @foreach (var item in Model.AllSkills) {
-        <td>
-            @item | <a asp-action="DeleteSkill">Delete</a> |
-        </td>
-        }
-        <a asp-action="DeleteSkill">Add</a>
-    </dl>
-</div>
-
-<div>
-    <hr />
-    <h4>One of the following skills</h4>
-    <dl class="dl-horizontal">
-        @foreach (var item in Model.OneOfSkills) {
-        <td>
-            @item | <a asp-action="DeleteSkill">Delete</a> |
-        </td>
-        }
-        <a asp-action="AddSkill">Add</a>
-    </dl>
+    <hr/>
+    <p> @ViewData["Message"]</p>
 </div>
 
 <table class="table">
@@ -41,7 +35,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.SelectedForEdit.LastName)
             </th>
-            <th> skills </th>
+            <th colspan="3"> skills </th>
             <th> Actions </th>
         </tr>
     </thead>
@@ -51,15 +45,22 @@
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
-            <td colspan="3">
+            <td >
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
-            <td>
-                @foreach(var skillDev in item.DeveloperSkills){
-                <li> @skillDev.Skill.Name 
-                    [<a asp-action="DeleteSkill" asp-route-idDeveloper="@skillDev.DeveloperId" asp-route-idSkill="@skillDev.Skill.ID">X</a>]
-                </li>
-                } 
+            <td >
+                @{
+                var i=0;
+                var l= item.DeveloperSkills.Count();
+                foreach(var skillDev in item.DeveloperSkills){
+                    i=i+1;
+                    <li> @skillDev.Skill.Name 
+                        [<a asp-action="DeleteSkill" asp-route-idDeveloper="@skillDev.DeveloperId" asp-route-idSkill="@skillDev.Skill.ID">X</a>]
+                    </li>
+                }
+                }  
+            </td>
+            <td >       
                 <div class="form-horizontal">
                     <form asp-controller="Main" asp-action="AddSkill" method="post" asp-route-idDeveloper="@item.ID" role="form">
                         @{
@@ -84,6 +85,10 @@
     </tbody>
 </table>
 
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
 @{ 
     if(Model.SelectedForDetails!=null) 
     { 
@@ -94,6 +99,6 @@
     }
     if(Model.SelectedForCreate!=null)
     { 
-        Html.RenderPartial("Edit", new @SoaWebsite.Common.Models.Developer()); 
+        Html.RenderPartial("Create", new @SoaWebsite.Common.Models.Developer()); 
     }
 }

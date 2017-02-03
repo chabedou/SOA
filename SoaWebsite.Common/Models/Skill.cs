@@ -8,10 +8,10 @@ namespace SoaWebsite.Common.Models
         [Key]
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Please enter skill name")]
-        [StringLength(50, ErrorMessage = "The skill name must be less than {1} characters.")]
+        [Required(ErrorMessage = "Please enter skill ")]
+        [StringLength(50, ErrorMessage = "skill must have less than {1} characters.")]
         [Display(Name = "Skill name:")]
-        [RegularExpression("^([a-zA-Z0-9 .&#+'-]+)$")]
+        [RegularExpression("^([a-zA-Z0-9 .&#+'-]+)$", ErrorMessage = "Invalid skill")]
         public string Name { get; set; }
 
         public  List<DeveloperSkill> DeveloperSkills { get; set; }

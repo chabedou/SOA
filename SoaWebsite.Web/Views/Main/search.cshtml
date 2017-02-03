@@ -1,0 +1,22 @@
+@model SoaWebsite.Web.ViewModels.SearchViewModel 
+
+<div>
+@{
+    foreach(var skill in model.AllOfSkills){
+    <li> @skill.Name 
+        [<a asp-action="DeleteSkill" asp-route-idDeveloper="@skillDev.DeveloperId" asp-route-idSkill="@skillDev.Skill.ID">X</a>]
+    </li>
+    }
+}
+</div>
+<div>
+@{
+    foreach(var skill in model.OneOfSkills){
+    <li> @skill.Name 
+        [<a asp-action="DeleteSkill" asp-route-idDeveloper="@skillDev.DeveloperId" asp-route-idSkill="@skillDev.Skill.ID">X</a>]
+    </li>
+    }
+}
+</div>
+
+

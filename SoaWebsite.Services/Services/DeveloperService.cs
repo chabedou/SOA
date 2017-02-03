@@ -11,7 +11,7 @@ namespace SoaWebsite.Services.Services
     {
         private readonly DeveloperContext _context;
 
-        public DeveloperService(DeveloperContext context) : base(typeof(DeveloperService),typeof(DeveloperService),new ServiceLifetime())
+        public DeveloperService(DeveloperContext context) : base(typeof(DeveloperService), typeof(DeveloperService), new ServiceLifetime())
         {
             _context = context;
         }
@@ -56,18 +56,18 @@ namespace SoaWebsite.Services.Services
 
         public void AddDeveloper(Developer Developer)
         {
-            var developer=(Developer)Developer;
-             developer.DeveloperSkills = new List<DeveloperSkill>();
+            var developer = (Developer)Developer;
+            developer.DeveloperSkills = new List<DeveloperSkill>();
             _context.Developers.Add(developer);
             _context.SaveChanges();
         }
 
         public DeveloperSkill GetDeveloperSkill(int? idDeveloper, int? idSkill)
         {
-            Developer developer = (Developer) DeveloperWithSkillsById(idDeveloper);
+            Developer developer = (Developer)DeveloperWithSkillsById(idDeveloper);
             if (idSkill != null && developer != null)
             {
-                DeveloperSkill developerSkill =  developer.DeveloperSkills
+                DeveloperSkill developerSkill = developer.DeveloperSkills
                                     .Where(d => d.SkillId == idSkill)
                                     .FirstOrDefault();
                 return developerSkill;
@@ -76,7 +76,7 @@ namespace SoaWebsite.Services.Services
         }
         public void RemoveDeveloper(Developer Developer)
         {
-            var developer=(Developer)Developer;
+            var developer = (Developer)Developer;
             foreach (var developerSkill in developer.DeveloperSkills)
             {
                 var skill = developerSkill.Skill;
@@ -93,7 +93,6 @@ namespace SoaWebsite.Services.Services
         public bool AddSkill(int? idDeveloper, Skill skill)
         {
             Developer developer = DeveloperWithSkillsById(idDeveloper);
-            
             Skill remoteSkill = SkillWithDevelopersByName(skill.Name);
             if (developer != null)
             {
@@ -104,19 +103,26 @@ namespace SoaWebsite.Services.Services
                     _context.Skills.Add(remoteSkill);
                     _context.SaveChanges();
                 }
-                var developerSkill = new DeveloperSkill
+                var exists = developer.DeveloperSkills
+                                      .Where(s => s.DeveloperId == developer.ID && s.SkillId == remoteSkill.ID)
+                                      .Count();
+                if (exists == 0)
                 {
-                    DeveloperId = developer.ID,
-                    SkillId = remoteSkill.ID,
-                    Skill = remoteSkill,
-                    Developer = developer
-                };
-                developer.DeveloperSkills.Add(developerSkill);
-                remoteSkill.DeveloperSkills.Add(developerSkill);
-                _context.Update(developer);
-                _context.Update(remoteSkill);
-                _context.SaveChanges();
-                return true;
+                    var developerSkill = new DeveloperSkill
+                    {
+                        DeveloperId = developer.ID,
+                        SkillId = remoteSkill.ID,
+                        Skill = remoteSkill,
+                        Developer = developer
+                    };
+                    developer.DeveloperSkills.Add(developerSkill);
+                    remoteSkill.DeveloperSkills.Add(developerSkill);
+                    _context.Update(developer);
+                    _context.Update(remoteSkill);
+                    _context.SaveChanges();
+                    return true;
+                }
+                return false;
             }
             return false;
         }
@@ -163,7 +169,7 @@ namespace SoaWebsite.Services.Services
             _context.Update(developer);
             _context.SaveChanges();
         }
-        
+
         public bool DeveloperExists(int id)
         {
             return _context.Developers.Any(e => e.ID == id);
