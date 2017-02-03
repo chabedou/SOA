@@ -51,9 +51,11 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Edit(int? idDeveloper)
         {
+
             ViewData["Message"] = "";
             ViewBag.Skills = service.Skills();
-            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
+            Developer developer = service.DeveloperWithSkillsById((int)idDeveloper);
+
             main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             main.SelectedForEdit = developer;
             return View("Index", main);
@@ -120,7 +122,7 @@ namespace SoaWebsite.Web.Controllers
             ViewBag.Skills = service.Skills();
             if (ModelState.IsValid)
             {
-                var added = service.AddSkill(idDeveloper, skill);
+                var added = service.AddSkill((int)idDeveloper, skill);
                 if (added)
                 {
                     ViewData["Message"] = "Success : Skill added to the user";
@@ -130,6 +132,7 @@ namespace SoaWebsite.Web.Controllers
                     ViewData["Message"] = "Fail : skill exists";
                 }
             }
+
             else
             {
                 ViewData["Message"] = "Fail : skill is not valid";

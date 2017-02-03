@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}\\SoaWebsite.Services\\bin\\Debug\\netcoreapp1.0\\SoaWebsite.Services.dll",
+            "program": "${workspaceRoot}\\SoaWebsite.Web\\bin\\Debug\\netcoreapp1.0\\SoaWebsite.Web.dll",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}\\SoaWebsite.Web",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {

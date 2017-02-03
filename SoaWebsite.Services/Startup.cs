@@ -34,7 +34,8 @@ namespace SoaWebsite.Services
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
             services.AddDbContext<DeveloperContext>(options =>
-                                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("SoaWebsite.Services")));
+                                         
             services.AddScoped<IDeveloperService,DeveloperService>();
         }
 

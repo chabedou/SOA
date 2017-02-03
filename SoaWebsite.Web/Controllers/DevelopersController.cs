@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Common.Contracts;
 using SoaWebsite.Common.Models;
-using Microsoft.Extensions.Logging;
 
 namespace SoaWebsite.Web.Controllers
 {
@@ -11,12 +10,10 @@ namespace SoaWebsite.Web.Controllers
     public class DevelopersController : Controller
     {
         private readonly IDeveloperService service;
-        private readonly ILogger logger;
 
-        public DevelopersController(IDeveloperService service, ILogger<DevelopersController> logger)
+        public DevelopersController(IDeveloperService service)
         {
             this.service = service;
-            this.logger = logger;
         }
 
         public IActionResult Index(string sortOrder, string[] selectedSkills)
@@ -59,7 +56,7 @@ namespace SoaWebsite.Web.Controllers
             {
                 return NotFound();
             }
-            var added = service.AddSkill(idDeveloper, skill);
+            var added = service.AddSkill((int)idDeveloper, skill);
             if (ModelState.IsValid && added)
             {
                 return RedirectToAction("Index");
@@ -69,7 +66,7 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Details(int? idDeveloper)
         {
-            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
+            Developer developer = service.DeveloperWithSkillsById((int)idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -79,7 +76,7 @@ namespace SoaWebsite.Web.Controllers
 
         public IActionResult Edit(int? idDeveloper)
         {
-            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
+            Developer developer = service.DeveloperWithSkillsById((int)idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -120,7 +117,7 @@ namespace SoaWebsite.Web.Controllers
         // GET: Developers/Delete/5
         public IActionResult Delete(int? idDeveloper)
         {
-            var developer = service.DeveloperById(idDeveloper);
+            var developer = service.DeveloperById((int)idDeveloper);
             if (developer == null)
             {
                 return NotFound();
@@ -146,7 +143,7 @@ namespace SoaWebsite.Web.Controllers
         // GET: Skills/Delete/5
         public IActionResult DeleteSkill(int? idDeveloper, int? idSkill)
         {
-            var developerSkill = service.GetDeveloperSkill(idDeveloper, idSkill);
+            var developerSkill = service.GetDeveloperSkill((int)idDeveloper, (int)idSkill);
             if (developerSkill == null)
             {
                 return NotFound();
@@ -163,7 +160,7 @@ namespace SoaWebsite.Web.Controllers
             var removed = service.TryRemoveSkill(idDeveloper, idSkill);
             if (removed)
             {
-                return RedirectToAction("Edit", new { idDeveloper = idDeveloper });
+                return RedirectToAction("Index");
             }
             return NotFound();
         }

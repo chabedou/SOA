@@ -7,21 +7,21 @@ namespace SoaWebsite.Common.Contracts
     {
         IEnumerable<Developer> GetAllDevelopers();
 
-        Developer DeveloperWithSkillsById(int? idDeveloper);
+        Developer DeveloperWithSkillsById(int idDeveloper);
 
-        Developer DeveloperById(int? idDeveloper);
+        Developer DeveloperById(int idDeveloper);
 
         Skill SkillWithDevelopersByName(string skillName);
 
         void AddDeveloper(Developer developer);
 
-        DeveloperSkill GetDeveloperSkill(int? idDeveloper, int? idSkill);
+        DeveloperSkill GetDeveloperSkill(int idDeveloper, int idSkill);
 
         void RemoveDeveloper(Developer developer);
 
-        bool AddSkill(int? idDeveloper, Skill skill);
+        bool AddSkill(int idDeveloper, Skill skill);
 
-        bool TryRemoveSkill(int? id, int? s);
+        bool TryRemoveSkill(int id, int s);
 
         IEnumerable<Developer> FindDevelopers(string[] skills, string sortOrder);
 
