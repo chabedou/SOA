@@ -21,12 +21,14 @@ namespace SoaWebsite.Web.Controllers
         public MainController(IDeveloperService service)
         {
             this.service = service;
+
         }
 
         public IActionResult Create()
         {
             ViewData["Message"] = "";
             Developer developer = new Developer();
+            ViewBag.Skills = service.Skills();
             main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             main.SelectedForCreate = developer;
             return View("Index", main);
@@ -94,7 +96,6 @@ namespace SoaWebsite.Web.Controllers
                 ViewData["Message"] = "Fail : the name of developer is not valid";
                 main.SelectedForEdit = developer;
             }
-
             return View("Index", main);
         }
         public IActionResult DeleteSkill(int idDeveloper, int idSkill)
@@ -130,7 +131,6 @@ namespace SoaWebsite.Web.Controllers
                     ViewData["Message"] = "Fail : skill exists";
                 }
             }
-
             else
             {
                 ViewData["Message"] = "Fail : skill is not valid";
@@ -155,6 +155,7 @@ namespace SoaWebsite.Web.Controllers
         public IActionResult Create(Developer developer)
         {
             ViewBag.Skills = service.Skills();
+            main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             if (ModelState.IsValid)
             {
                 ViewData["Message"] = "Success : developer added";
@@ -165,7 +166,6 @@ namespace SoaWebsite.Web.Controllers
                 ViewData["Message"] = "Fail : Invalid developer name, see below ";
                 main.SelectedForCreate = developer;
             }
-            main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             return View("Index", main);
         }
     }
