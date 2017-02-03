@@ -35,8 +35,7 @@ namespace SoaWebsite.Web.Controllers
         {
             ViewBag.Skills = service.Skills();
             ViewData["Message"] = "";
-            var list = service.FindDevelopers(selectedSkills, "").ToList();
-            main.Developers = list;
+            main.Developers = service.FindDevelopers(selectedSkills, "").ToList();
             return View(main);
         }
 
@@ -44,7 +43,7 @@ namespace SoaWebsite.Web.Controllers
         {
             ViewData["Message"] = "";
             ViewBag.Skills = service.Skills();
-            main.SelectedForDetails = service.DeveloperWithSkillsById(idDeveloper);
+            main.SelectedForDetails = service.DeveloperWithSkillsById((int)idDeveloper);
             main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             return View("Index", main);
         }
@@ -55,7 +54,6 @@ namespace SoaWebsite.Web.Controllers
             ViewData["Message"] = "";
             ViewBag.Skills = service.Skills();
             Developer developer = service.DeveloperWithSkillsById((int)idDeveloper);
-
             main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             main.SelectedForEdit = developer;
             return View("Index", main);
@@ -144,7 +142,7 @@ namespace SoaWebsite.Web.Controllers
         // GET: Developers/Delete/5
         public IActionResult Delete(int? idDeveloper)
         {
-            Developer developer = service.DeveloperWithSkillsById(idDeveloper);
+            Developer developer = service.DeveloperWithSkillsById((int)idDeveloper);
             if (developer != null)
             {
                 service.RemoveDeveloper(developer);
