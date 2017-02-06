@@ -2,7 +2,7 @@
 @{
      ViewData["Title"] = "Skills matcher"; 
     }
-
+<script src="https://use.fontawesome.com/5b0cca6392.js"></script>
 <h2>Developers :</h2>
 
     @using (Html.BeginForm()) {
@@ -35,7 +35,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.SelectedForEdit.LastName)
             </th>
-            <th colspan="3"> skills </th>
+            <th colspan="2"> Skills </th>
             <th> Actions </th>
         </tr>
     </thead>
@@ -55,7 +55,9 @@
                 foreach(var skillDev in item.DeveloperSkills){
                     i=i+1;
                     <li> @skillDev.Skill.Name 
-                        [<a asp-action="DeleteSkill" asp-route-idDeveloper="@skillDev.DeveloperId" asp-route-idSkill="@skillDev.Skill.ID">X</a>]
+                        <a asp-action="DeleteSkill" asp-route-idDeveloper="@skillDev.DeveloperId" asp-route-idSkill="@skillDev.Skill.ID">
+                            <i class="fa fa-times" aria-hidden="true" title="Remove this skill"></i>
+                        </a>
                     </li>
                 }
                 }  
@@ -70,15 +72,18 @@
                         @Html.HiddenFor(model => skill.ID)
                         @Html.EditorFor(model => skill.Name) 
                         @Html.ValidationMessageFor(model => skill.Name)
-                        <input type="submit" value="+" class="btn btn-success" />
+                        <input type="submit" title="Add a skill" value="+" class="btn btn-success" />
                         }
                     </form>
                 </div>
             </td>
             <td>
-                <a asp-action="Edit" asp-route-idDeveloper="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-idDeveloper="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-idDeveloper="@item.ID">Delete</a>
+                <a asp-action="Edit" asp-route-idDeveloper="@item.ID">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit developer" style="color:seagreen"></i>
+                </a>
+                <a asp-action="Delete" asp-route-idDeveloper="@item.ID">
+                    <i class="fa fa-times" aria-hidden="true" title="Remove this developer" style="color:red"></i>
+                </a>
             </td>
         </tr>
         }
