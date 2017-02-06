@@ -49,7 +49,7 @@ namespace SoaWebsite.Services.Services
 
         public void AddDeveloper(Developer Developer)
         {
-            var developer = (Developer)Developer;
+            var developer = Developer;
             developer.DeveloperSkills = new List<DeveloperSkill>();
             _context.Developers.Add(developer);
             _context.SaveChanges();
@@ -58,7 +58,7 @@ namespace SoaWebsite.Services.Services
 
         public DeveloperSkill GetDeveloperSkill(int idDeveloper, int idSkill)
         {
-            Developer developer = (Developer) DeveloperWithSkillsById(idDeveloper);
+            Developer developer = DeveloperWithSkillsById(idDeveloper);
             if (developer != null)
             {
                 DeveloperSkill developerSkill = developer.DeveloperSkills
@@ -136,7 +136,7 @@ namespace SoaWebsite.Services.Services
                 }
                 var skill = developerSkill.Skill;
                 developer.DeveloperSkills.Remove(developerSkill);
-                skill.DeveloperSkills.Remove(developerSkill);
+
                 _context.Update(developer);
                 _context.Update(skill);
                 _context.SaveChanges();

@@ -28,6 +28,7 @@ namespace SoaWebsite.Tests
                 developer.LastName = "Tata";
                 service.AddDeveloper(developer);
                 var secondDeveloper = new Developer();
+                secondDeveloper.ID = 2;
                 secondDeveloper.FirstName = "Bob";
                 secondDeveloper.LastName = "Bobby";
                 service.AddDeveloper(secondDeveloper);
@@ -37,6 +38,7 @@ namespace SoaWebsite.Tests
                 skill.Name = "Java";
                 service.AddSkill(developer.ID, skill);
                 skill = new Skill();
+                skill.ID = 2;
                 skill.Name = "C#";
                 service.AddSkill(secondDeveloper.ID, skill);
             }
