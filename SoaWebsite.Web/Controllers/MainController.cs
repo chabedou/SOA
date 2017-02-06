@@ -111,7 +111,7 @@ namespace SoaWebsite.Web.Controllers
             }
             ViewBag.Skills = service.Skills();
             main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
-            return View("Index", main);
+            return Redirect("~/Main");
         }
 
         [HttpPost]
@@ -136,7 +136,7 @@ namespace SoaWebsite.Web.Controllers
                 ViewData["Message"] = "Fail : skill is not valid";
             }
             main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
-            return View("Index", main);
+            return Redirect("~/Main");
         }
 
         // GET: Developers/Delete/5
@@ -166,7 +166,7 @@ namespace SoaWebsite.Web.Controllers
                 ViewData["Message"] = "Fail : Invalid developer name, see below ";
                 main.SelectedForCreate = developer;
             }
-            return View("Index", main);
+            return Redirect("~/Main");
         }
     }
 }
