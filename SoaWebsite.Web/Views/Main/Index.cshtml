@@ -4,13 +4,23 @@
     }
 <script src="https://use.fontawesome.com/5b0cca6392.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="dist/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="dist/sweetalert.css">
 <script>
 $(document).ready(function () {
   $('[data-confirm]').click(function (e) {
-    if (!confirm($(this).attr("data-confirm")))
-    {
-      e.preventDefault();
-    }
+    swal({
+    title: "Are you serious?",
+    text: "You will not be able to recover this imaginary file!",
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#DD6B55",
+    confirmButtonText: "Yes, delete it!",
+    closeOnConfirm: false
+    },
+    function(){
+    swal("Deleted!", "Your imaginary file has been deleted.", "success");
+    });
   });
 });
 </script>
@@ -61,10 +71,7 @@ $(document).ready(function () {
             </td>
             <td>
                 @{
-                var i=0;
-                var l= item.DeveloperSkills.Count();
                 foreach(var skillDev in item.DeveloperSkills){
-                    i=i+1;
                     <li> @skillDev.Skill.Name 
                         <a asp-action="DeleteSkill" asp-route-idDeveloper="@skillDev.DeveloperId" asp-route-idSkill="@skillDev.Skill.ID">
                             <i class="fa fa-times" aria-hidden="true" title="Remove this skill"></i>
