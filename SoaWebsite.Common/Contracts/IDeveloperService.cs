@@ -6,7 +6,7 @@ namespace SoaWebsite.Common.Contracts
     public interface IDeveloperService
     {
         IEnumerable<Developer> GetAllDevelopers();
-
+        IEnumerable<Skill> GetAllSkills();
         Developer DeveloperWithSkillsById(int idDeveloper);
 
         Developer DeveloperById(int idDeveloper);
@@ -20,6 +20,8 @@ namespace SoaWebsite.Common.Contracts
         void RemoveDeveloper(Developer developer);
 
         bool AddSkill(int idDeveloper, Skill skill);
+
+        void RemoveUnusedSkills();
 
         bool TryRemoveSkill(int id, int s);
 

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SoaWebsite.Common.Models;
 using SoaWebsite.Common.Contracts;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace SoaWebsite.Services.Services
 {
@@ -19,6 +20,12 @@ namespace SoaWebsite.Services.Services
         public IEnumerable<Developer> GetAllDevelopers()
         {
             return _context.Developers;
+        }
+
+        public IEnumerable<Skill> GetAllSkills()
+        {
+            return _context.Skills.Include(d => d.DeveloperSkills)
+                                    .ThenInclude(d => d.Developer);
         }
 
         public Developer DeveloperById(int idDeveloper)
@@ -184,10 +191,20 @@ namespace SoaWebsite.Services.Services
             return DeveloperWithSkillsById(idDeveloper);
         }
 
-        Skill IDeveloperService.SkillWithDevelopersByName(string skillName)
+        public void RemoveUnusedSkills()
         {
-            return SkillWithDevelopersByName(skillName);
+            var skills = _context.Skills
+                                 .Include(d => d.DeveloperSkills)
+                                 .ThenInclude(x => x.Developer);
+                                 
+            foreach (var skill in skills)
+            {
+                if (skill.DeveloperSkills == null || skill.DeveloperSkills.Count == 0)
+                {
+                    _context.Skills.Remove(skill);
+                }
+            }
+            _context.SaveChanges();
         }
-
     }
 }

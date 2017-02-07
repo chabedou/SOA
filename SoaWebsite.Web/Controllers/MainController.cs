@@ -24,6 +24,11 @@ namespace SoaWebsite.Web.Controllers
 
         }
 
+        public IActionResult CleanDatabase()
+        {
+            service.RemoveUnusedSkills();
+            return Redirect("~/Main");
+        }
         public IActionResult Create()
         {
             ViewData["Message"] = "";
@@ -65,38 +70,24 @@ namespace SoaWebsite.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int idDeveloper, [Bind("ID,FirstName,LastName")] Developer developer)
         {
-            ViewBag.Skills = service.Skills();
-            main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
             if (idDeveloper != developer.ID)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                try
-                {
-                    service.Update(developer);
-                    ViewData["Message"] = "Success : Developer was modified";
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!service.DeveloperExists(developer.ID))
-                    {
-                        ViewData["Message"] = "Fail : Developer was already in the database";
-                    }
-                    else
-                    {
-                        ViewData["Message"] = "Fail : Developer can not be added";
-                    }
-                    throw;
-                }
+                service.Update(developer);
+                ViewData["Message"] = "Success : Developer was modified";
             }
             else
             {
+                ViewBag.Skills = service.Skills();
+                main.Developers = service.FindDevelopers(new string[] { }, "").ToList();
                 ViewData["Message"] = "Fail : the name of developer is not valid";
                 main.SelectedForEdit = developer;
+                return View("Index", main);
             }
-            return View("Index", main);
+            return Redirect("~/Main");
         }
         public IActionResult DeleteSkill(int idDeveloper, int idSkill)
         {
