@@ -4,25 +4,24 @@
     }
 <script src="https://use.fontawesome.com/5b0cca6392.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="dist/sweetalert.min.js"></script>
-<link rel="stylesheet" type="text/css" href="dist/sweetalert.css">
+<script src="lib\sweetalert\dist\sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="lib\sweetalert\dist\sweetalert.css">
 <script>
-$(document).ready(function () {
-  $('[data-confirm]').click(function (e) {
-    swal({
-    title: "Are you serious?",
-    text: "You will not be able to recover this imaginary file!",
-    type: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#DD6B55",
-    confirmButtonText: "Yes, delete it!",
-    closeOnConfirm: false
-    },
-    function(){
-    swal("Deleted!", "Your imaginary file has been deleted.", "success");
-    });
+function validateData(ctl, event, id) {
+  event.preventDefault();
+  swal({
+  title: "Are you serious?",
+  type: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#DD6B55",
+  confirmButtonText: "Yes, delete it!",
+  closeOnConfirm: false,
+  },  
+  function()   
+    {  
+      window.location.href = "/Main/Delete/" + id;     
   });
-});
+};
 </script>
 <h2>Developers :</h2>
 
@@ -99,8 +98,8 @@ $(document).ready(function () {
                 <a asp-action="Edit" asp-route-idDeveloper="@item.ID">
                     <i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit developer" style="color:seagreen"></i>
                 </a>
-                <a asp-action="Delete" asp-route-idDeveloper="@item.ID">
-                    <i class="fa fa-times" aria-hidden="true" title="Remove this developer" style="color:red" data-confirm="Are you SERIOUS ?"></i>
+                <a asp-action="Delete" asp-route-idDeveloper="@item.ID" onclick="return validateData(this, event, @item.ID);">
+                    <i class="fa fa-times" aria-hidden="true" title="Remove this developer" style="color:red"></i>
                 </a>
             </td>
         </tr>
