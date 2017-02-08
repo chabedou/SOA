@@ -32,7 +32,7 @@ namespace SoaWebsite.Services.Services
         private static Func<Developer, bool> ConditionSkill(string bySkill)
         {
             Func<DeveloperSkill, bool> condition = s => s.Skill.Name.Contains(bySkill);
-            return s => s.DeveloperSkills.Where(condition).Count() > 0;
+            return s => s.DeveloperSkills != null && s.DeveloperSkills.Where(condition).Count() > 0;
         }
     }
 }

@@ -35,6 +35,12 @@ namespace SoaWebsite.Tests.WebTests.ServicesTests
             var filter = new Filter(skills);
 
             Assert.AreEqual(true, filter.Condition()(developer));
+
+            Developer secondDeveloper = new Developer();
+            secondDeveloper.FirstName = "Bob";
+            secondDeveloper.LastName = "Bobby";
+
+            Assert.AreEqual(false, filter.Condition()(secondDeveloper));
         }
     }
 }
