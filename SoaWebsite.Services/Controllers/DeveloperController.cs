@@ -9,11 +9,11 @@ using SoaWebsite.Services.Services;
 namespace SoaWebsite.Services.Controllers
 {
     [Route("api")]
-    public class DeveloperController : Controller
+    public class ServiceController : Controller
     {
         private readonly DeveloperService service;
         private readonly DeveloperContext _context;
-        public DeveloperController(DeveloperContext context)
+        public ServiceController(DeveloperContext context)
         {
             service = new DeveloperService(context);
             _context = context;
@@ -61,14 +61,13 @@ namespace SoaWebsite.Services.Controllers
         [HttpGet("skill")]
         public IEnumerable<Skill> GetAllSkills()
         {
-            return _context.Skills;
+            return service.GetAllSkills();
         }
 
         [HttpGet("skill/id/{id}")]
         public Skill SkillById(int id)
         {
-            Skill skill = _context.Skills
-                            .SingleOrDefault(m => m.ID == id);
+            Skill skill = service.SkillById(id);
             return skill;
         }
 
