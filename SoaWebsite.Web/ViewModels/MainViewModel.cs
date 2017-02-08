@@ -11,6 +11,5 @@ namespace SoaWebsite.Web.ViewModels
         public Developer SelectedForDetails { get; set; }
         public Developer SelectedForEdit { get; set; }
         public Developer SelectedForCreate { get; set; }
-
     }
 }
