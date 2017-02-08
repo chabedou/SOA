@@ -25,10 +25,6 @@ function validateData(ctl, event, id) {
 </script>
 <h2>Developers :</h2>
 @{ 
-    if(Model.SelectedForDetails!=null) 
-    { 
-        Html.RenderPartial("Details", @Model.SelectedForDetails); 
-    } 
     if(Model.SelectedForEdit!=null)
     { Html.RenderPartial("Edit", @Model.SelectedForEdit); 
     }
