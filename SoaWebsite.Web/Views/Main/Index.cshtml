@@ -24,6 +24,16 @@ function validateData(ctl, event, id) {
 };
 </script>
 <h2>Developers :</h2>
+@{ 
+    if(Model.SelectedForEdit!=null)
+    { Html.RenderPartial("Edit", @Model.SelectedForEdit); 
+    }
+    if(Model.SelectedForCreate!=null)
+    { 
+        Html.RenderPartial("Create", new @SoaWebsite.Common.Models.Developer()); 
+    }
+}
+
 
     @using (Html.BeginForm()) {
     <div>
@@ -119,16 +129,3 @@ function validateData(ctl, event, id) {
     <a asp-action="Create">Create New</a>
 </p>
 
-@{ 
-    if(Model.SelectedForDetails!=null) 
-    { 
-        Html.RenderPartial("Details", @Model.SelectedForDetails); 
-    } 
-    if(Model.SelectedForEdit!=null)
-    { Html.RenderPartial("Edit", @Model.SelectedForEdit); 
-    }
-    if(Model.SelectedForCreate!=null)
-    { 
-        Html.RenderPartial("Create", new @SoaWebsite.Common.Models.Developer()); 
-    }
-}

@@ -10,7 +10,7 @@ namespace SoaWebsite.Common.Contracts
         Developer DeveloperWithSkillsById(int idDeveloper);
 
         Developer DeveloperById(int idDeveloper);
-
+        Skill SkillById(int id);
         Skill SkillWithDevelopersByName(string skillName);
 
         void AddDeveloper(Developer developer);
@@ -32,7 +32,7 @@ namespace SoaWebsite.Common.Contracts
         void Update(Developer developer);
 
         bool DeveloperExists(int id);
-
+        
         List<string> Skills();
 
     }

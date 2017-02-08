@@ -206,5 +206,14 @@ namespace SoaWebsite.Services.Services
             }
             _context.SaveChanges();
         }
+
+        public Skill SkillById(int id)
+        {
+            Skill skill = _context.Skills
+                                  .Include(d => d.DeveloperSkills)
+                                  .ThenInclude(x => x.Developer)
+                                  .SingleOrDefault(m => m.ID == id);
+            return skill;
+        }
     }
 }
